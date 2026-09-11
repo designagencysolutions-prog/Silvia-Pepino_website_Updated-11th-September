@@ -834,6 +834,13 @@ document.querySelectorAll(".star-field").forEach((canvas, fieldIndex) => {
         "Thank you — your message has been sent. I'll be in touch shortly.";
       status.className = "contact__status is-success";
     } catch (err) {
+      // The visitor gets a plain message, but whoever maintains the site gets
+      // the real reason in the console. The one worth recognising is
+      // "This form needs Activation" — FormSubmit emails an activation link to
+      // the inbox the first time a form posts from a new domain, and nothing
+      // is delivered until someone clicks it.
+      console.warn("[contact form]", err && err.message ? err.message : err);
+
       // Never leave someone with an unsent message: fall back to their mail
       // client with everything they typed already filled in.
       const body = [
