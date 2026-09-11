@@ -1,0 +1,12 @@
+{
+  "name": "Dr Silvia Pepino",
+  "short_name": "S. Pepino",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0e20",
+  "theme_color": "#13172f",
+  "icons": [
+    { "src": "/assets/favicon/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/favicon/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

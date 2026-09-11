@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Working copies, not part of the published site
+Disallow: /_archive/
+
+Sitemap: https://silviapepino.com/sitemap.xml

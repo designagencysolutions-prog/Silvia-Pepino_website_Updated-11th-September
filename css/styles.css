@@ -1,0 +1,5885 @@
+/* ===== Design tokens ===== */
+:root {
+  --bg-primary: #13172f;
+  --bg-deep: #0d1024;
+  --bg-panel: #12162d;
+  --purple: #5c48f5;
+  --purple-light: #9170f2;
+  --purple-glow: rgba(117, 71, 255, 0.2);
+  --pink: #df4491;
+  --white-smoke: #f9fafb;
+  --cloud: #e1e1e1;
+  --link-blue: #7a8fff;
+  --border-soft: rgba(84, 107, 229, 0.5);
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Lato", sans-serif;
+  --font-ui: "Inter", sans-serif;
+
+  --nav-h: 78px;
+  --container-w: 1240px;
+  /* Fluid side margin: a fixed inset looked generous on a laptop and mean
+     on a 27" display. Grows with the viewport, then stops at 200px so the
+     text measure doesn't keep narrowing on very wide screens. */
+  --section-pad-x: clamp(112px, 9vw, 200px);
+  /* One rhythm for the whole page: every section gets this above and
+     below unless it has a reason not to. */
+  --section-pad-y: 150px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--white-smoke);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.container {
+  max-width: var(--container-w);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Offset for the fixed header */
+main {
+  padding-top: var(--nav-h);
+}
+
+.section {
+  padding: var(--section-pad-y) var(--section-pad-x);
+  position: relative;
+  overflow: clip;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --nav-h: 62px;
+    --section-pad-x: 24px;
+    /* Proportionally tighter, but still a clear break between sections */
+    --section-pad-y: 88px;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 32px;
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 400;
+  color: #fff;
+  white-space: nowrap;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.92;
+}
+
+.btn-primary {
+  background: var(--purple);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 1);
+}
+
+/* Secondary CTA — glass rather than a filled button: it still reads as a
+   button, but sits back from the primary violet used elsewhere. */
+.btn-quiet {
+  padding: 15px 28px;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 26px -14px rgba(0, 0, 0, 0.7);
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16px;
+  letter-spacing: 0.01em;
+  color: rgba(249, 250, 251, 0.92);
+  transition: background 0.25s ease, border-color 0.25s ease, gap 0.25s ease,
+    color 0.25s ease;
+}
+
+.btn-quiet:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+  gap: 15px;
+}
+
+.eyebrow-icon {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.eyebrow-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(150deg, #7547ff 0%, #1eb59e 117%);
+}
+
+.eyebrow-icon::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 8px;
+  width: 30px;
+  height: 29px;
+  border-radius: 4px;
+  border: 1px solid var(--purple-light);
+  background: rgba(40, 31, 31, 0.2);
+  backdrop-filter: blur(2px);
+}
+
+/* Larger variant — two 32px tiles offset diagonally, sized off the box so
+   the pair scales as one unit. */
+.eyebrow-icon--lg {
+  width: 46px;
+  height: 46px;
+}
+
+.eyebrow-icon--lg::before {
+  inset: 0 14px 14px 0;
+  border-radius: 8px;
+}
+
+.eyebrow-icon--lg::after {
+  left: auto;
+  top: auto;
+  width: auto;
+  height: auto;
+  inset: 14px 0 0 14px;
+  border-radius: 8px;
+}
+
+/* Counter-rotating, on periods that don't divide evenly */
+.eyebrow-icon--spin::before {
+  animation: tile-turn-a 14s linear infinite;
+}
+
+.eyebrow-icon--spin::after {
+  animation: tile-turn-b 19s linear infinite;
+}
+
+@keyframes tile-turn-a {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tile-turn-b {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow-icon--spin::before,
+  .eyebrow-icon--spin::after {
+    animation: none;
+  }
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  color: var(--white-smoke);
+}
+
+/* ===== Navigation ===== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--nav-h);
+  padding: 0;
+  transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  /* Tracks the section inset, so the logo lines up with the copy below */
+  padding: 0 var(--section-pad-x);
+  background: rgba(19, 23, 47, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid transparent;
+  border-radius: 0;
+  transition: padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.35s ease,
+    box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+/* Floating pill on scroll — 58px pill with 14px of space above */
+.nav.scrolled {
+  height: 86px;
+  padding: 14px 24px;
+}
+
+.nav.scrolled .nav__inner {
+  max-width: var(--container-w);
+  margin: 0 auto;
+  padding: 0 14px 0 28px;
+  border-radius: 999px;
+  background: rgba(19, 23, 47, 0.4);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Taller than the old wordmark — this mark is portrait (roughly 2:3), so
+   matching the previous 22px height would have left it tiny. */
+.nav__logo img {
+  height: 38px;
+  width: auto;
+  transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav.scrolled .nav__logo img {
+  height: 30px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav,
+  .nav__inner,
+  .nav__logo img {
+    transition: none;
+  }
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+}
+
+.nav__links a {
+  padding: 4px 16px;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.nav__links a.active {
+  border: 0.5px solid #000;
+  background: linear-gradient(
+    172deg,
+    rgba(255, 255, 255, 0.2) 15%,
+    rgba(141, 119, 204, 0.2) 115%
+  );
+}
+
+.nav__links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav__toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nav__toggle span {
+  width: 24px;
+  height: 2px;
+  background: #fff;
+}
+
+@media (max-width: 900px) {
+  .nav__inner {
+    padding: 0 24px;
+  }
+  .nav.scrolled {
+    height: 72px;
+    padding: 10px 16px;
+  }
+  .nav.scrolled .nav__inner {
+    padding: 0 10px 0 20px;
+  }
+  .nav__links {
+    position: fixed;
+    inset: var(--nav-h) 0 0 0;
+    height: 0;
+    overflow: hidden;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 0 24px;
+    background: var(--bg-primary);
+    transition: height 0.25s ease, padding 0.25s ease;
+  }
+  .nav__links.open {
+    height: calc(100vh - var(--nav-h));
+    padding: 24px;
+  }
+  .nav__toggle {
+    display: flex;
+  }
+}
+
+/* ===== Hero ===== */
+.hero {
+  /* Distance from the arc's apex to the bottom of the section — i.e. how
+     much dark "ground" sits below the horizon. It only has to clear the
+     circle's sag at the screen edge, which is now ~4.2vw, so 5vw leaves
+     the band as thin as it can safely be and gives the photo more room. */
+  --horizon-drop: 5vw;
+  /* Driven by scroll: 1 = full planetary curve, higher = flatter */
+  --horizon-flat: 1;
+  --horizon-glow: 1;
+  padding-top: 80px;
+  padding-bottom: calc(60px + var(--horizon-drop));
+  /* Fill the screen below the fixed header */
+  min-height: calc(100vh - var(--nav-h));
+  min-height: calc(100dvh - var(--nav-h));
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  /* Centred in the sky — the asymmetric padding (80px top vs 60px + drop
+     bottom) makes the midpoint of the content box land within ~10px of the
+     midpoint between the header and the horizon line. */
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -10%;
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(
+    circle,
+    var(--purple-glow) 0%,
+    rgba(117, 71, 255, 0) 70%
+  );
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Name above the headline. Sized in vw so it tracks the h1 beside it, and
+   held well below full brightness — it introduces the headline rather than
+   competing with it. */
+.hero__wordmark {
+  width: clamp(170px, 20vw, 268px);
+  height: auto;
+  margin-bottom: 4px;
+  /* Arrives before the headline and settles into place */
+  opacity: 0;
+  transform: translateY(16px) scale(0.97);
+  filter: blur(4px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Overrides the generic .reveal child rule, which would otherwise force it
+   to full opacity and cancel the settle */
+.hero__content.is-visible .hero__wordmark {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+@media (max-width: 900px) {
+  .hero__wordmark {
+    width: clamp(150px, 40vw, 208px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__wordmark {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Copy sits left, over the photographic background */
+.hero__layout {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--container-w);
+  margin: 0 auto;
+}
+
+
+/* Wrapper so the headline, tagline and CTA can stagger in together */
+.hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* The photograph IS the background, not an element sitting on it. Stripped
+   to greyscale and dropped in brightness, then re-coloured by the violet
+   overlay below — a duotone, so it belongs to the palette rather than
+   being a picture placed inside it. */
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ---- Hero option B: full-bleed duotone photograph, copy on the left ----
+   Scoped to .hero--photobg so option A (the cut-out figure, saved as
+   index-hero-option-a.html) still renders from the default rules below. */
+.hero--photobg .hero__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  /* Pushed further right, still covering the full section */
+  object-position: 74% 20%;
+  opacity: 1;
+  filter: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* Darkens the left for the copy, and settles the photo into the horizon */
+.hero--photobg .hero__photo::after {
+  background: linear-gradient(
+      90deg,
+      rgba(11, 14, 32, 0.94) 0%,
+      rgba(11, 14, 32, 0.78) 32%,
+      rgba(11, 14, 32, 0.34) 62%,
+      rgba(11, 14, 32, 0.18) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(11, 14, 32, 0.62) 0%,
+      rgba(11, 14, 32, 0.1) 34%,
+      rgba(11, 14, 32, 0.55) 100%
+    );
+}
+
+.hero--photobg .hero__content {
+  align-items: flex-start;
+  text-align: left;
+  /* Wide enough that "Economist, Board Director," holds on one line, so
+     the explicit break gives exactly two lines rather than three */
+  max-width: 740px;
+  margin: 0;
+}
+
+/* Smaller than the centred version — it introduces the headline here
+   rather than carrying the hero on its own */
+.hero--photobg .hero__wordmark {
+  width: clamp(140px, 14vw, 196px);
+}
+
+.hero--photobg h1 {
+  font-size: clamp(28px, 3.9vw, 54px);
+}
+
+/* Transparent nav at the top of this page, so the photograph runs
+   uninterrupted behind it. It still solidifies into the glass pill once
+   you scroll — .nav.scrolled is untouched. */
+.page-home .nav:not(.scrolled) .nav__inner {
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* main is normally offset by the nav height; here the hero must start at
+   the very top so the photograph passes behind the bar. The hero adds the
+   clearance back as padding instead. */
+.page-home main {
+  padding-top: 0;
+}
+
+/* Vertically centred as before, just nudged down so her face sits clear
+   above the copy. */
+.hero--photobg {
+  padding-top: calc(var(--nav-h) + 70px);
+}
+
+.hero--photobg .hero__layout {
+  margin-top: 14vh;
+}
+
+/* Responsive: same arrangement at every width. Only the crop and the
+   nudge change, since a narrower viewport crops more off the sides. */
+@media (max-width: 1100px) {
+  .hero--photobg .hero__photo img {
+    object-position: 68% 18%;
+  }
+  .hero--photobg .hero__layout {
+    margin-top: 11vh;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero--photobg .hero__photo img {
+    /* Tighter crop keeps her in frame once the sides are gone */
+    object-position: 60% 16%;
+  }
+  .hero--photobg .hero__photo::after {
+    background: linear-gradient(
+        180deg,
+        rgba(11, 14, 32, 0.55) 0%,
+        rgba(11, 14, 32, 0.3) 34%,
+        rgba(11, 14, 32, 0.9) 100%
+      );
+  }
+  .hero--photobg .hero__layout {
+    margin-top: 9vh;
+  }
+  .hero--photobg .hero__content {
+    max-width: none;
+  }
+}
+
+/* Cut out of her original photograph, so there's no rectangle to hide —
+   the figure simply stands in the scene. The residual dark around her
+   edges matches the page background, which is why it reads seamlessly. */
+.hero__photo img {
+  position: absolute;
+  right: 2%;
+  bottom: 0;
+  width: auto;
+  height: 88%;
+  max-width: 46%;
+  object-fit: contain;
+  object-position: bottom right;
+  /* Already duotoned in the file itself, so no colour filter here — she
+     sits behind the copy as part of the background. */
+  opacity: 0.34;
+  /* Feathers the very bottom so she rises out of the horizon */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 74%,
+    rgba(0, 0, 0, 0.6) 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 74%,
+    rgba(0, 0, 0, 0.6) 90%,
+    transparent 100%
+  );
+}
+
+/* Pools darkness behind the centred copy so it stays legible where it
+   crosses her, and thins out towards the right where she should read. */
+.hero__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      52% 48% at 46% 42%,
+      rgba(13, 16, 34, 0.8) 0%,
+      rgba(13, 16, 34, 0.34) 62%,
+      transparent 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(80, 50, 180, 0.07),
+      rgba(80, 50, 180, 0.07)
+    );
+}
+
+@media (max-width: 1100px) {
+  .hero__photo img {
+    right: -4%;
+    height: 62%;
+    max-width: 58%;
+    opacity: 0.26;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero__photo img {
+    opacity: 0.18;
+  }
+}
+
+/* Discipline strip beneath the hero */
+.hero__domains {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: var(--container-w);
+  margin-inline: auto;
+  align-items: center;
+  gap: 10px 26px;
+  margin-top: 56px;
+  font-family: var(--font-ui) !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42) !important;
+  max-width: none !important;
+}
+
+/* Separators drawn in CSS so the markup stays clean */
+.hero__domains span + span::before {
+  content: "·";
+  margin-right: 26px;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+@media (max-width: 1000px) {
+  .hero__content {
+    max-width: none;
+  }
+  .hero__domains {
+    margin-top: 40px;
+    font-size: 11px !important;
+    letter-spacing: 0.16em;
+  }
+}
+
+/* Twinkling star field */
+.hero__stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Aurora — two slow, heavily blurred bands drifting above the horizon.
+   Painted before .hero::after, so the planet's dark fill clips them at the
+   curve and the light only ever reads as sky. */
+.hero__aurora {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--horizon-drop) - 30px);
+  width: 170%;
+  height: 56%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero__aurora::before,
+.hero__aurora::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+}
+
+/* One hue family, not four. The earlier version ran violet against blue,
+   magenta and cyan — a spectrum reads as a tech product; a single colour
+   in two tones reads as light. */
+.hero__aurora::before {
+  background: radial-gradient(
+      58% 100% at 38% 100%,
+      rgba(117, 71, 255, 0.3) 0%,
+      rgba(117, 71, 255, 0) 74%
+    ),
+    radial-gradient(
+      44% 90% at 72% 100%,
+      rgba(96, 82, 190, 0.2) 0%,
+      rgba(96, 82, 190, 0) 76%
+    );
+  /* Heavier blur so it's an atmospheric wash rather than defined bands */
+  filter: blur(70px);
+  animation: aurora-a 26s ease-in-out infinite alternate;
+}
+
+.hero__aurora::after {
+  background: radial-gradient(
+      50% 96% at 62% 100%,
+      rgba(146, 112, 240, 0.2) 0%,
+      rgba(146, 112, 240, 0) 76%
+    ),
+    radial-gradient(
+      38% 86% at 24% 100%,
+      rgba(104, 88, 200, 0.14) 0%,
+      rgba(104, 88, 200, 0) 78%
+    );
+  filter: blur(86px);
+  animation: aurora-b 37s ease-in-out infinite alternate;
+}
+
+/* Different periods and opposing directions, so the two never resync into a
+   noticeable pulse — the drift stays irregular the way real airglow does.
+   The horizontal travel is what actually makes the colours read as moving:
+   the violet and magenta cores slide past each other and swap sides. */
+/* Small, slow travel. The previous ±13% swing over 7s was the main reason
+   it read as an effect — light this size should be almost imperceptible
+   in motion, noticed only if you look for it. */
+@keyframes aurora-a {
+  from {
+    transform: translate3d(-3%, 3%, 0) scale(0.97, 0.94);
+    opacity: 0.62;
+  }
+  to {
+    transform: translate3d(3%, -2%, 0) scale(1.05, 1.09);
+    opacity: 0.92;
+  }
+}
+
+@keyframes aurora-b {
+  from {
+    transform: translate3d(3.5%, 1%, 0) scale(1.06, 1.08);
+    opacity: 0.85;
+  }
+  to {
+    transform: translate3d(-3.5%, -3%, 0) scale(0.96, 0.95);
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__aurora::before,
+  .hero__aurora::after {
+    animation: none;
+  }
+}
+
+/* Curved horizon arc at the base of the hero */
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  /* A true circle, ~6x the viewport wide. The wider the circle the shallower
+     the arc: sag at the screen edge is (50vw)²/2r, so doubling the radius
+     halves the curve. Apex still sits --horizon-drop above the section
+     bottom, so nothing else needs moving. */
+  width: 600vw;
+  height: 600vw;
+  bottom: calc(var(--horizon-drop) - 600vw);
+  /* Origin is the apex, so scaling the circle up flattens the visible arc
+     without shifting the horizon line itself. Cheaper than resizing. */
+  transform-origin: 50% 0;
+  transform: translateX(-50%) scale(var(--horizon-flat));
+  will-change: transform;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  box-shadow: 0 -1px 0 0 rgb(178 150 255 / calc(0.5 * var(--horizon-glow))),
+    0 -10px 40px -6px rgb(117 71 255 / calc(0.45 * var(--horizon-glow))),
+    0 -60px 120px -20px rgb(117 71 255 / calc(0.3 * var(--horizon-glow)));
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (max-width: 900px) {
+}
+
+/* Glass orb that trails the cursor */
+.hero__deco {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  pointer-events: none;
+  /* above the hero copy, so the glass samples the text beneath it */
+  z-index: 5;
+  opacity: 0;
+  transform: translate3d(-200px, -200px, 0) scale(0.6);
+  transition: opacity 0.4s ease;
+  will-change: transform;
+
+  background: radial-gradient(
+    circle at 32% 28%,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.05) 38%,
+    rgba(255, 255, 255, 0.02) 70%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* light body distortion — text stays legible through the centre */
+  backdrop-filter: blur(1.5px) saturate(190%) brightness(1.18) contrast(1.06);
+  -webkit-backdrop-filter: blur(1.5px) saturate(190%) brightness(1.18)
+    contrast(1.06);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 8px rgba(117, 71, 255, 0.2), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* Rim refraction — heavier blur masked to the outer edge, so text bends
+   as it passes under the curve of the lens */
+.hero__deco::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  backdrop-filter: blur(6px) brightness(1.1);
+  -webkit-backdrop-filter: blur(6px) brightness(1.1);
+  mask: radial-gradient(
+    circle at 50% 50%,
+    transparent 52%,
+    #000 72%,
+    #000 100%
+  );
+  -webkit-mask: radial-gradient(
+    circle at 50% 50%,
+    transparent 52%,
+    #000 72%,
+    #000 100%
+  );
+  pointer-events: none;
+}
+
+/* Specular highlight sitting on top of the glass */
+.hero__deco::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+      circle at 30% 24%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0) 34%
+    ),
+    radial-gradient(
+      circle at 72% 82%,
+      rgba(169, 165, 252, 0.3) 0%,
+      rgba(169, 165, 252, 0) 42%
+    );
+  pointer-events: none;
+}
+
+.hero__deco.is-visible {
+  opacity: 1;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .hero__deco {
+    display: none;
+  }
+}
+
+/* Finer than before: smaller ceiling, and slightly open letter-spacing so
+   Space Grotesk Light reads as considered rather than compressed. */
+.hero h1 {
+  font-size: clamp(28px, 4.4vw, 60px);
+  letter-spacing: -0.005em;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.hero p {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.5vw, 21px);
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--cloud);
+  max-width: 780px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.hero .btn {
+  position: relative;
+  z-index: 1;
+  font-size: 20px;
+  height: 69px;
+  padding: 8px 32px;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    padding-top: 48px;
+  }
+  .hero h1 {
+    font-size: 48px;
+  }
+  .hero p {
+    font-size: 20px;
+  }
+}
+
+/* ===== Domains — rolling strip ===== */
+/* Parked, not deleted: the graph markup stays in place so it can be
+   brought back by removing .is-parked from the section. */
+/* Utility, so it has to beat whatever display the component sets. .graph
+   declares `display: block` further down the file at equal specificity,
+   which was winning on source order and leaving the section visible. */
+.is-parked {
+  display: none !important;
+}
+
+.domains__intro {
+  max-width: 900px;
+  margin: 0 0 56px;
+  text-align: left;
+}
+
+/* max-width removed so the explicit break controls the two lines rather
+   than the measure forcing a third */
+.domains__intro h2 {
+  font-size: clamp(30px, 4vw, 56px);
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+  margin: 0 0 30px;
+}
+
+/* Below this the line is too long to hold; let it wrap naturally */
+@media (max-width: 1000px) {
+  .domains__intro h2 br {
+    display: none;
+  }
+}
+
+/* Short intro copy — set larger than body text, since it's the first
+   thing read after the hero. */
+.domains__bio {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.7;
+  color: rgba(249, 250, 251, 0.82);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Three paragraphs now: the opener leads, the two that follow sit back a
+   step so the block has a clear entry point. */
+.domains__bio + .domains__bio {
+  margin-top: 18px;
+  font-size: clamp(16px, 1.3vw, 18px);
+  color: rgba(249, 250, 251, 0.66);
+}
+
+.domains__bio a {
+  color: var(--link-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.domains__cta {
+  margin-top: 52px;
+  text-align: left;
+}
+
+.domains__marquee {
+  overflow: hidden;
+  margin-inline: calc(-1 * var(--section-pad-x));
+  padding-block: 6px;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+}
+
+.domain-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: 280px;
+  height: 280px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--tint) 6%, #0a0d16 88%);
+}
+
+.domain-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 15% 15% 28%;
+}
+
+.domain-card__label {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  /* Right padding + a tighter leading so the longer labels
+     ("Capital Markets & Banking Regulation") wrap to two lines
+     inside the same 72px bar instead of running off the edge. */
+  padding-right: 20px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.25;
+  color: #fff;
+}
+
+/* Placeholder for a card whose artwork hasn't arrived yet: a soft tint
+   wash so the slot reads as intentional rather than broken. */
+.domain-card__img--placeholder {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    62% 52% at 50% 38%,
+    color-mix(in srgb, var(--tint) 42%, transparent),
+    transparent 72%
+  );
+}
+
+@media (max-width: 900px) {
+  .domain-card {
+    width: 186px;
+    height: 186px;
+  }
+  .domain-card__label {
+    height: 56px;
+    font-size: 15px;
+  }
+}
+
+/* ===== Multi-domain graph ===== */
+.graph {
+  display: block;
+}
+
+.graph__intro {
+  text-align: center;
+  margin: 0 auto 72px;
+  max-width: 900px;
+}
+
+.graph__intro h2 {
+  font-size: clamp(30px, 4.8vw, 68px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-bottom: 26px;
+}
+
+/* Turquoise with a highlight sweeping across the letterforms. The gradient
+   is clipped to the text, and it's the background position that animates —
+   so the glyphs themselves never move or reflow. */
+.graph__intro h2 span {
+  color: #4fbfa8;
+  background: linear-gradient(
+    100deg,
+    #3aa892 0%,
+    #4fbfa8 34%,
+    #c8fff2 50%,
+    #4fbfa8 66%,
+    #3aa892 100%
+  );
+  background-size: 260% 100%;
+  /* Tiles seamlessly (both ends of the gradient are the same colour), so the
+     text is never left uncovered — with a transparent fill, any gap in the
+     background means invisible letters. */
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: title-shimmer 5s linear infinite;
+}
+
+/* Stays within 0–100%, where a background larger than its box always
+   covers it fully. */
+@keyframes title-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .graph__intro h2 span {
+    background: none;
+    -webkit-text-fill-color: #4fbfa8;
+    animation: none;
+  }
+}
+
+/* Generic scroll reveal — add .reveal to any block */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger direct children when they sit side by side */
+.reveal > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal.is-visible > *:nth-child(2) {
+  transition-delay: 0.14s;
+}
+
+.reveal.is-visible > *:nth-child(3) {
+  transition-delay: 0.28s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.graph__lede {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 1.5;
+  color: rgba(225, 225, 225, 0.72);
+  margin: 0 auto 40px;
+  max-width: 46ch;
+}
+
+/* Panel below the graph — icon rail on the left, single column of prose */
+.graph__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  /* Full section width, flush with the activity row above */
+  margin: 96px 0 0;
+  padding: 40px 96px 40px 44px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    170deg,
+    rgba(79, 191, 168, 0.05) 0%,
+    rgba(10, 13, 30, 0.35) 60%
+  );
+}
+
+.graph__note-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  color: #6fd8bf;
+  background: rgba(79, 191, 168, 0.12);
+  border: 1px solid rgba(79, 191, 168, 0.3);
+  box-shadow: 0 0 26px -8px rgba(79, 191, 168, 0.7);
+}
+
+.graph__note-icon svg {
+  width: 28px;
+  height: 28px;
+  animation: sparkle-spin 14s linear infinite;
+}
+
+@keyframes sparkle-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .graph__note-icon svg {
+    animation: none;
+  }
+}
+
+.graph__note-body p {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 17px;
+  /* Light text on a dark background renders thicker than it should — this
+     turns off subpixel rendering so Lato Light actually looks light. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Runs the full panel width — the extra leading keeps long lines
+     trackable, since the eye has further to travel on the return sweep. */
+  line-height: 1.85;
+  color: rgba(225, 225, 225, 0.78);
+}
+
+.graph__note-body p + p {
+  margin-top: 18px;
+}
+
+.graph__note-body p:last-child {
+  color: rgba(225, 225, 225, 0.9);
+}
+
+.graph__canvas {
+  position: relative;
+  pointer-events: none;
+}
+
+.graph__wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.graph__row {
+  display: grid;
+  gap: 18px;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+/* Narrower than the activity row and centred on it, so the trunk sits dead
+   centre and the wires fan outward on the way down. */
+.graph__row--domains {
+  /* Stays narrower than the activity row below, so the wires still fan out */
+  width: min(100%, 920px);
+  margin: 0 auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+/* Empty — the wires route through this space. Needs enough room for two
+   24px card gaps, two 46px stubs and a visible trunk between the buses. */
+.graph__gap {
+  height: 260px;
+}
+
+.graph__row--activities {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+}
+
+/* Group labels — name the two halves so the diagram reads as domains
+   feeding into the decisions they shape, rather than two loose rows. */
+.graph__group {
+  font-family: var(--font-ui) !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42) !important;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Sits inside the wire gap. Left-aligned deliberately — the trunk runs
+   down the centre, and a centred label would collide with it. */
+.graph__group--mid {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  text-align: left;
+  max-width: 30%;
+}
+
+.graph__gap {
+  position: relative;
+}
+
+/* --- Domain node cards --- */
+/* Same treatment as the rolling strip: a solid tinted gradient, the 3D
+   icon floating in it, and a frosted label bar across the foot. */
+.node-card {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--accent) 6%, #0a0d16 88%);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.node-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px -18px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.node-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Extra room at the foot so the icon clears the label bar */
+  padding: 15% 15% 30%;
+}
+
+.node-card__label {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.2;
+  text-align: center;
+  color: #fff;
+}
+
+/* The strip cards have no accent rule under the label */
+.node-card__bar {
+  display: none;
+}
+
+/* --- Activity cards --- */
+.activity-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 30px 14px 26px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(
+    170deg,
+    color-mix(in srgb, var(--accent) 9%, transparent) 0%,
+    rgba(10, 13, 30, 0.3) 70%
+  );
+  text-align: center;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.activity-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.activity-card__icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--accent);
+  box-shadow: 0 0 22px -6px color-mix(in srgb, var(--accent) 70%, transparent),
+    inset 0 0 18px -8px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.activity-card__icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.activity-card h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 300;
+  color: #fff;
+}
+
+.activity-card p {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.45;
+  color: rgba(225, 225, 225, 0.72);
+}
+
+/* --- Wires --- */
+.wire {
+  fill: none;
+  stroke: var(--wire-color, rgba(255, 255, 255, 0.22));
+  stroke-width: 1.2;
+  opacity: 0.5;
+}
+
+/* Dash geometry and the travel animation are driven from JS so each segment
+   can own a precise slice of the shared cycle. */
+.wire-pulse {
+  fill: none;
+  stroke: var(--wire-color, #fff);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px var(--wire-color, #fff));
+}
+
+.wire-dot {
+  fill: var(--wire-color, #fff);
+  filter: drop-shadow(0 0 6px var(--wire-color, #fff));
+  /* SVG transforms default to the user-space origin — this makes the
+     junction flare scale about the circle's own centre instead. */
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Below this the cards wrap to multiple rows, which the single-rank wire
+   routing can't represent — so the graph degrades to a plain card grid. */
+@media (max-width: 1100px) {
+  .graph__wires {
+    display: none;
+  }
+  .graph__intro {
+    margin-bottom: 48px;
+  }
+  .graph__intro h2 {
+    font-size: 40px;
+  }
+  .graph__lede {
+    font-size: 19px;
+  }
+  .graph__note {
+    flex-direction: column;
+    gap: 22px;
+    margin-top: 56px;
+    padding: 28px 24px;
+  }
+  .graph__gap {
+    height: 40px;
+  }
+  .node-card__img {
+    width: 66px;
+    height: 66px;
+  }
+  .node-card__label {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 640px) {
+  .graph__row--domains {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .graph__row--activities {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .node-card__img {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+/* ===== About Silvia ===== */
+.about {
+  display: grid;
+  /* Must track --orbit-size, or the visual overflows its column */
+  grid-template-columns: minmax(0, 1fr) 540px;
+  gap: 56px;
+  /* A little beyond the standard inset, so the orbit ring isn't crowded by
+     the page edge — but still relative to it, or the two sides drift apart
+     as the viewport grows. */
+  padding-right: calc(var(--section-pad-x) + 40px);
+  /* Shared measure so the title and the body end on the same right edge */
+  --about-measure: 660px;
+  /* Top-aligned now the copy is much taller than the portrait */
+  align-items: start;
+}
+
+.about__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+/* Shared section tag — used by Experience and Awards */
+.tag {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #b3a8ff;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(145, 112, 242, 0.45);
+  background: rgba(117, 71, 255, 0.14);
+}
+
+/* Two explicit lines. The copy column is roughly 580px here, so the size
+   is capped low enough that the longer second line still fits on one row —
+   at the old 44px it wrapped to three. */
+.about__title {
+  font-size: clamp(24px, 2.4vw, 33px);
+  line-height: 1.24;
+  letter-spacing: -0.018em;
+  margin-bottom: 32px;
+  max-width: var(--about-measure);
+}
+
+/* One highlight travelling across the whole headline. Base is a soft
+   lavender-white so the crest has somewhere brighter to go — a pure white
+   base would leave no headroom for the sweep to read against. */
+.shimmer-title {
+  background: linear-gradient(
+    100deg,
+    #b9b6d8 0%,
+    #dcdaf0 30%,
+    #ffffff 50%,
+    #dcdaf0 70%,
+    #b9b6d8 100%
+  );
+  background-size: 240% 100%;
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: title-shimmer 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-title {
+    background: none;
+    -webkit-text-fill-color: var(--white-smoke);
+    animation: none;
+  }
+}
+
+/* Standfirst between the headline and the numbered list. Set a shade
+   larger than the list copy so the hierarchy reads title → lede → detail. */
+.about__lede {
+  max-width: var(--about-measure);
+  margin-bottom: 44px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.72;
+  color: rgba(249, 250, 251, 0.78);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Second and third paragraphs step back, so the opening line still leads */
+.about__lede p + p {
+  margin-top: 16px;
+  font-size: 16px;
+  color: rgba(249, 250, 251, 0.62);
+}
+
+/* --- Credential list --- */
+/* Hairline-separated rows with a numeral gutter. The rule lives on the
+   list's top edge and on each row's bottom edge, so the last row closes the
+   block and doubles as the divider before the academic band. */
+.creds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: var(--about-measure);
+  border-top: 1px solid rgba(255, 255, 255, 0.11);
+  font-family: var(--font-body);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.cred {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 0 16px;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+}
+
+/* No closing rule — the logo band below reads as part of the last row
+   rather than as a separate block. */
+.cred:last-child {
+  border-bottom: 0;
+}
+
+.cred__num {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.34);
+  /* Nudged onto the optical baseline of the title beside it */
+  padding-top: 5px;
+}
+
+.cred__title {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  color: var(--white-smoke);
+  margin: 0;
+}
+
+/* The whole heading is the trigger. Reset the button to inherit the
+   heading's type so it reads as text, not a control. */
+.cred__toggle {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  /* Padding grows the tap target; the matching negative margin keeps the
+     heading occupying the same space, so nothing shifts on the page. */
+  padding: 16px 0;
+  margin: -16px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cred__toggle:hover .cred__sign,
+.cred__toggle:focus-visible .cred__sign {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Plus / minus built from two bars. Opening turns the whole mark a quarter
+   and fades the horizontal bar, so the bar left standing has rotated from
+   vertical to horizontal — a visible spin rather than a swapped glyph. */
+.cred__sign {
+  position: relative;
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  align-self: flex-start;
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.38);
+  transition: transform 0.42s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+}
+
+.cred__sign::before,
+.cred__sign::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: currentColor;
+  border-radius: 1px;
+  transform: translate(-50%, -50%);
+}
+
+.cred__sign::before {
+  width: 100%;
+  height: 1.5px;
+  transition: opacity 0.28s ease;
+}
+
+.cred__sign::after {
+  width: 1.5px;
+  height: 100%;
+}
+
+.cred.is-open .cred__sign {
+  transform: rotate(90deg);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cred.is-open .cred__sign::before {
+  opacity: 0;
+}
+
+/* 0fr → 1fr animates to the panel's natural height without measuring it in
+   JS. The inner wrapper carries min-height: 0 so the grid track can
+   actually collapse, and the padding so it doesn't animate separately. */
+.cred__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease;
+}
+
+.cred.is-open .cred__panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.cred__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cred__panel-inner > p {
+  padding-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cred__panel,
+  .cred__sign,
+  .cred__sign::before {
+    transition: none;
+  }
+}
+
+.cred p {
+  margin: 0;
+  color: rgba(249, 250, 251, 0.62);
+  font-size: 15.5px;
+  line-height: 1.65;
+}
+
+.cred cite {
+  font-style: italic;
+}
+
+.cred a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.32);
+  text-underline-offset: 3px;
+}
+
+.cred a:hover {
+  color: var(--white-smoke);
+  text-decoration-color: rgba(255, 255, 255, 0.7);
+}
+
+/* --- Academic band --- */
+.unis {
+  list-style: none;
+  /* Left inset matches the credential list's text column (44px numeral
+     gutter + 16px gap), so the logos hang off the same edge as the copy. */
+  margin: 26px 0 72px 60px;
+  padding: 0;
+  max-width: var(--about-measure);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 46px;
+}
+
+.unis .uni {
+  display: flex;
+  align-items: center;
+  /* Separator lives on the item so it never trails the last one */
+  position: relative;
+}
+
+.unis .uni img {
+  display: block;
+  height: var(--uni-h, 24px);
+  width: auto;
+  opacity: 0.82;
+  transition: opacity 0.25s ease;
+}
+
+.unis .uni img:hover {
+  opacity: 1;
+}
+
+/* --- Orbit system around the portrait --- */
+/* Everything below is a proportion of --orbit-size, so the whole system
+   resizes from this one value with no loss of sharpness. */
+.about__visual {
+  --orbit-size: 540px;
+  justify-self: center;
+  /* Centred against the full height of the copy column */
+  align-self: center;
+  position: relative;
+  width: var(--orbit-size);
+  height: var(--orbit-size);
+}
+
+.orbits {
+  position: absolute;
+  inset: 0;
+}
+
+/* Ambient wash behind the portrait. Kept wide and faint — when it was
+   tighter and stronger it read as a violet band rather than atmosphere. */
+.orbits::before {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: rgba(117, 71, 255, 0.09);
+  filter: blur(110px);
+}
+
+/* Violet blooms around the rings. Three separate elements rather than one
+   multi-gradient layer, so each can drift on its own path — and because
+   they animate on transform alone they stay on the compositor, which a
+   70px blur repainting every frame would not. */
+.orbit-haze {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(60px);
+  will-change: transform;
+}
+
+.orbit-haze--1 {
+  width: 58%;
+  height: 58%;
+  left: -16%;
+  top: 0%;
+  background: rgba(124, 84, 255, 0.2);
+  animation: haze-drift-1 17s ease-in-out infinite alternate;
+}
+
+.orbit-haze--2 {
+  width: 50%;
+  height: 50%;
+  right: -12%;
+  bottom: -4%;
+  background: rgba(172, 96, 235, 0.16);
+  animation: haze-drift-2 23s ease-in-out infinite alternate;
+}
+
+.orbit-haze--3 {
+  width: 42%;
+  height: 42%;
+  right: 6%;
+  top: -14%;
+  background: rgba(88, 128, 255, 0.14);
+  animation: haze-drift-3 29s ease-in-out infinite alternate;
+}
+
+/* 17s / 23s / 29s — all prime, so the three never realign */
+@keyframes haze-drift-1 {
+  from {
+    transform: translate3d(-8%, 6%, 0) scale(0.88);
+    opacity: 0.6;
+  }
+  to {
+    transform: translate3d(14%, -12%, 0) scale(1.16);
+    opacity: 1;
+  }
+}
+
+@keyframes haze-drift-2 {
+  from {
+    transform: translate3d(10%, -8%, 0) scale(1.14);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(-12%, 10%, 0) scale(0.86);
+    opacity: 0.55;
+  }
+}
+
+@keyframes haze-drift-3 {
+  from {
+    transform: translate3d(6%, 10%, 0) scale(0.92);
+    opacity: 0.5;
+  }
+  to {
+    transform: translate3d(-14%, -6%, 0) scale(1.2);
+    opacity: 0.95;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-haze {
+    animation: none;
+  }
+}
+
+.orbit-portrait {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* 80% leaves an 8pt gap to the inner ring at 88% — any wider and the
+     portrait crowds the line instead of sitting inside it. */
+  width: 80%;
+  height: 80%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  object-fit: cover;
+  /* Pulled back so the violet wash below has room to read */
+  filter: saturate(0.8) contrast(1.06) brightness(0.96);
+  box-shadow: 0 0 50px rgba(117, 71, 255, 0.14);
+}
+
+/* Violet wash over the portrait, matching the section's identity. Sits on
+   the exact geometry of the image so it stays inside the circle, and blends
+   with `color` — taking hue and saturation from the gradient while keeping
+   the photo's luminance, which reads as a duotone rather than a flat tint.
+   Dial --portrait-tint down towards 0 for a more natural skin tone. */
+.orbits::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80%;
+  height: 80%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: linear-gradient(150deg, #7547ff 0%, #a855f7 55%, #4a7dff 100%);
+  mix-blend-mode: color;
+  opacity: var(--portrait-tint, 0.2);
+  pointer-events: none;
+}
+
+/* Rings. Diameter is twice the radius its track uses, so the icons ride
+   exactly on the line. */
+.orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(169, 165, 252, 0.08);
+  transform: translate(-50%, -50%);
+}
+
+.orbit--inner {
+  width: 88%;
+  height: 88%;
+}
+
+.orbit--outer {
+  width: 100%;
+  height: 100%;
+  border-color: rgba(169, 165, 252, 0.1);
+  border-style: dashed;
+}
+
+/* The tracks carry everything round. Opposite directions and unequal
+   periods, so the two rings never lock into step. */
+.orbit-track {
+  position: absolute;
+  inset: 0;
+  animation: orbit-spin var(--dur) linear infinite;
+}
+
+/* Radii must be absolute: a percentage translate on a zero-size anchor
+   would resolve against zero. Half of each ring's diameter. */
+.orbit-track--inner {
+  --r: calc(var(--orbit-size) * 0.44);
+  --dur: 46s;
+}
+
+.orbit-track--outer {
+  --r: calc(var(--orbit-size) * 0.5);
+  --dur: 68s;
+  animation-direction: reverse;
+}
+
+/* Zero-size anchor placed on the ring at angle --a */
+.orbit-light {
+  --size: 8px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--a)) translateY(calc(-1 * var(--r)));
+}
+
+.orbit-light::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--size);
+  height: var(--size);
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  border-radius: 50%;
+  background: #d8dcff;
+  box-shadow: 0 0 10px 2px rgba(169, 165, 252, 0.9),
+    0 0 22px 6px rgba(117, 71, 255, 0.45);
+  animation: orbit-light-pulse 3.5s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes orbit-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes orbit-light-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-track,
+  .orbit-light::after {
+    animation: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .about {
+    grid-template-columns: 1fr;
+    --about-measure: none;
+    padding-right: var(--section-pad-x);
+  }
+  /* Portrait follows the copy on narrow screens: the numbered list is the
+     point of this section, and leading with a 380px circle pushed it below
+     the fold. Source order already puts the copy first, so no `order`. */
+  .about__visual {
+    --orbit-size: min(340px, 82vw);
+    position: relative;
+    top: auto;
+    margin-top: 56px;
+  }
+  .about__title {
+    font-size: 30px;
+  }
+}
+
+/* ===== Trusted-by tagline (quote) ===== */
+.quote {
+  text-align: center;
+}
+
+.quote blockquote {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 50px;
+  line-height: 1.3;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.quote blockquote span {
+  color: var(--purple-light);
+  font-size: 0.7em;
+  vertical-align: super;
+}
+
+/* Stella cadente — enters top right, falls away to the left. The head is
+   the bright left end; the gradient trails off behind it to the right, so
+   the tail always points back the way it came. */
+.shooting-star {
+  position: absolute;
+  top: 14%;
+  right: -12%;
+  width: 210px;
+  height: 2px;
+  border-radius: 999px;
+  /* Long soft tail, short hot head — the brightness is concentrated in the
+     last 12% so the leading point reads as the meteor itself. */
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(150, 172, 255, 0.18) 38%,
+    rgba(190, 206, 255, 0.6) 72%,
+    rgba(228, 236, 255, 0.95) 88%,
+    #fff 100%
+  );
+  filter: drop-shadow(0 0 5px rgba(168, 190, 255, 0.85));
+  /* Pivot at the head, so the tail stretches out behind it */
+  transform-origin: left center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  animation: shooting-star 11s linear infinite;
+}
+
+/* A second, dimmer one on a different path and an odd interval, so the two
+   never fall in a recognisable pattern. */
+.shooting-star--faint {
+  top: 46%;
+  right: -8%;
+  width: 130px;
+  height: 1.5px;
+  opacity: 0;
+  filter: drop-shadow(0 0 4px rgba(168, 190, 255, 0.6));
+  animation-duration: 17s;
+  animation-delay: 6.5s;
+}
+
+/* A shallow 10deg pitch keeps it in frame long enough to read as a streak.
+   It stretches as it accelerates and shortens again as it burns out, which
+   is what stops it looking like a bar sliding across the screen. */
+@keyframes shooting-star {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(10deg) scaleX(0.15);
+    opacity: 0;
+    animation-timing-function: ease-out;
+  }
+  1.5% {
+    opacity: 0.85;
+  }
+  4% {
+    transform: translate3d(-30vw, 5.3vw, 0) rotate(10deg) scaleX(1);
+    opacity: 1;
+    animation-timing-function: linear;
+  }
+  9% {
+    transform: translate3d(-78vw, 13.7vw, 0) rotate(10deg) scaleX(0.92);
+    opacity: 0.7;
+    animation-timing-function: ease-in;
+  }
+  13% {
+    transform: translate3d(-125vw, 22vw, 0) rotate(10deg) scaleX(0.4);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(-125vw, 22vw, 0) rotate(10deg) scaleX(0.4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shooting-star {
+    display: none;
+  }
+}
+
+/* Plato — same voice as the other pull quote, a shade smaller so it reads
+   as a citation rather than a second headline. */
+/* Keeps the quote above the streak, which would otherwise paint over it */
+.quote--plato figure {
+  position: relative;
+  z-index: 1;
+}
+
+/* Star field behind the quote, faded at the edges so it doesn't collide
+   with the section boundaries. */
+.quote__stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(
+    ellipse 80% 70% at 50% 50%,
+    #000 25%,
+    transparent 85%
+  );
+  mask-image: radial-gradient(
+    ellipse 80% 70% at 50% 50%,
+    #000 25%,
+    transparent 85%
+  );
+}
+
+/* ~40ch lands the break after "the seasons," splitting it evenly in two */
+/* Twice the length of the line it replaced, so it steps down a size and
+   takes a wider measure — otherwise it stacks into five tall lines. */
+.quote--plato blockquote {
+  font-size: clamp(22px, 2.7vw, 36px);
+  line-height: 1.34;
+  max-width: 46ch;
+}
+
+.quote--plato blockquote span {
+  font-size: 1.5em;
+  /* Big marks hang better sitting low rather than raised as superscript */
+  vertical-align: -0.22em;
+  line-height: 0;
+}
+
+.quote--plato blockquote span:first-child {
+  margin-right: 0.16em;
+}
+
+.quote--plato blockquote span:last-child {
+  margin-left: 0.16em;
+}
+
+.quote--plato figcaption {
+  margin-top: 28px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.quote--plato cite {
+  font-style: italic;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 900px) {
+  .quote blockquote {
+    font-size: 28px;
+  }
+  .quote--plato blockquote {
+    font-size: 26px;
+    max-width: none;
+  }
+  .quote--plato blockquote span {
+    font-size: 1.35em;
+  }
+  .quote--plato figcaption {
+    margin-top: 20px;
+    font-size: 12px;
+  }
+}
+
+/* ===== Key ideas ===== */
+.ideas {
+  padding-top: var(--section-pad-y);
+  padding-bottom: var(--section-pad-y);
+}
+
+/* Title on the left, standfirst on the right. Bottom-aligned so the two
+   sit on a shared baseline despite their different heights. */
+.ideas__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 36px;
+  align-items: end;
+  margin-bottom: 72px;
+}
+
+.ideas__title {
+  font-size: clamp(28px, 3.5vw, 46px);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.ideas__lede {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.7;
+  /* Capped measure — it was running the full column width */
+  max-width: 68ch;
+  color: rgba(225, 225, 225, 0.72);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base layout — plain 2x2. The interlocking version below overrides it
+   once there's room; below that breakpoint these stay ordinary cards. */
+.ideas__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+.idea-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 38px 36px 40px;
+  min-height: 260px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Accent bloom in the top-left corner, over a base fill shared by all
+     four pieces. The bloom is kept tight enough that it fades out long
+     before reaching any tab — a tint that reached the knobs was what made
+     them mismatch their neighbours and read as lumps. */
+  background: radial-gradient(
+      75% 85% at 12% 8%,
+      color-mix(in srgb, var(--accent) 30%, transparent) 0%,
+      color-mix(in srgb, var(--accent) 9%, transparent) 38%,
+      transparent 62%
+    ),
+    linear-gradient(
+      158deg,
+      rgba(26, 30, 60, 0.95) 0%,
+      rgba(14, 17, 38, 0.96) 55%,
+      rgba(10, 13, 30, 0.97) 100%
+    );
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- Reveal: the pieces interlock, then their text fades up ---
+   These override the generic .reveal child rules, which only do a plain
+   translateY and would otherwise cancel the per-piece offsets. */
+.ideas__grid .idea-card {
+  opacity: 0;
+  transform: var(--from, translateY(24px));
+  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.6s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition-delay: var(--piece-delay, 0s);
+}
+
+.ideas__grid.is-visible .idea-card {
+  opacity: 1;
+  transform: none;
+}
+
+/* No lift on hover — the pieces interlock, so moving one would tear the
+   board open. The artwork brightens instead. */
+
+/* Contents wait for the pieces to seat before appearing. The artwork is
+   excluded — it's a direct child too, and this rule was overriding its
+   own low opacity on specificity and rendering it at full strength. */
+.ideas__grid .idea-card > *:not(.idea-card__art) {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.ideas__grid.is-visible .idea-card > *:not(.idea-card__art) {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--piece-delay, 0s) + 0.55s);
+}
+
+/* Artwork fades up to its own faint level as the section arrives */
+.ideas__grid .idea-card__art {
+  opacity: 0;
+  transition: opacity 0.9s ease, transform 0.4s ease;
+}
+
+/* Per-card, because the artworks differ a lot in density — the satellite
+   field is thousands of bright points and reads far stronger than the
+   others at the same value. */
+.ideas__grid.is-visible .idea-card__art {
+  opacity: var(--art-opacity, 0.16);
+  transition-delay: calc(var(--piece-delay, 0s) + 0.5s);
+}
+
+.idea-card:nth-child(4) {
+  --art-opacity: 0.09;
+  --art-opacity-hover: 0.55;
+}
+
+.ideas__grid.is-visible .idea-card:hover .idea-card__art {
+  opacity: var(--art-opacity-hover, 1);
+  transform: scale(1.04);
+  transition-delay: 0s;
+}
+
+.idea-card:nth-child(1) {
+  --piece-delay: 0s;
+}
+.idea-card:nth-child(2) {
+  --piece-delay: 0.12s;
+}
+.idea-card:nth-child(3) {
+  --piece-delay: 0.24s;
+}
+.idea-card:nth-child(4) {
+  --piece-delay: 0.36s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ideas__grid .idea-card,
+  .ideas__grid .idea-card > *:not(.idea-card__art) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .ideas__grid .idea-card__art {
+    opacity: var(--art-opacity, 0.16);
+    transition: none;
+  }
+}
+
+/* Artwork bleeding in from the right of each piece. Hidden until the
+   puzzle layout kicks in, since the narrow fallback has no room for it. */
+.idea-card__art {
+  display: none;
+  position: absolute;
+  /* Inset by the 48px surround so the artwork stays inside the piece's own
+     cell — at right/top 0 it sat in the tab margin and spilled past the
+     board into the section below. */
+  right: 48px;
+  top: 48px;
+  height: 360px;
+  width: 340px;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.21;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease, transform 0.4s ease;
+  /* Fades out towards the text so the two never fight */
+  -webkit-mask-image: linear-gradient(
+    to left,
+    #000 40%,
+    rgba(0, 0, 0, 0.35) 72%,
+    transparent 95%
+  );
+  mask-image: linear-gradient(
+    to left,
+    #000 40%,
+    rgba(0, 0, 0, 0.35) 72%,
+    transparent 95%
+  );
+}
+
+.idea-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.idea-card__icon {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  box-shadow: inset 0 0 22px -8px color-mix(in srgb, var(--accent) 85%, transparent);
+}
+
+.idea-card__icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.idea-card__num {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: color-mix(in srgb, var(--accent) 75%, transparent);
+}
+
+.idea-card h3 {
+  font-size: 26px;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+  /* Two-line reservation so the body copy starts at the same height in
+     every piece, whether the title wraps or not */
+  min-height: 2.44em;
+  display: flex;
+  align-items: flex-end;
+}
+
+.idea-card a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.idea-card p {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16.5px;
+  line-height: 1.68;
+  color: rgba(225, 225, 225, 0.72);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- Interlocking jigsaw board ----
+   Each piece is a 470x300 cell inside a 590x420 box; the 60px surround is
+   what lets a tab protrude past the cell without being clipped. Negative
+   margins pull the oversized boxes back so the cells still tile edge to
+   edge, and the paths are generated so every tab has a matching blank.
+
+   The geometry is in fixed pixels because clip-path: path() has no
+   percentage form — a circular knob can't survive being stretched. So the
+   board keeps one size and only appears when there's room for it. */
+@media (min-width: 1240px) {
+  /* The board spans the section's full content width, so it grows with the
+     viewport while the section keeps its 100px padding either side.
+     --puzzle is the flag the script reads to know the jigsaw is active. */
+  .ideas__head,
+  .ideas__lede {
+    max-width: none;
+  }
+
+  .ideas__grid {
+    --puzzle: on;
+    --pad: 48px;
+    --cell-h: 380px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: var(--cell-h);
+    gap: 0;
+  }
+
+  /* Each piece's box overhangs its cell by --pad on all sides, giving a
+     protruding tab room to sit outside the cell; the negative margin pulls
+     the boxes back so the cells still tile flush. */
+  .idea-card {
+    width: calc(100% + var(--pad) * 2);
+    height: calc(var(--cell-h) + var(--pad) * 2);
+    margin: calc(var(--pad) * -1);
+    /* 48px surround + 40px knob reach = content starts 88px in */
+    padding: 88px 46% 88px 88px;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.32));
+  }
+
+  /* Pinned to the piece's own top-right rather than the text column's */
+  .idea-card__num {
+    position: absolute;
+    top: 88px;
+    right: 88px;
+  }
+
+  /* Silhouettes themselves are set inline by the script, sized to whatever
+     the board actually measures. */
+  .idea-card__art {
+    display: block;
+    right: var(--pad);
+    top: var(--pad);
+    height: var(--cell-h);
+    width: 42%;
+  }
+
+  /* Pieces 2 and 3 sit over their neighbours' tabs */
+  .idea-card:nth-child(2),
+  .idea-card:nth-child(3) {
+    z-index: 1;
+  }
+
+  .idea-card:nth-child(4) {
+    z-index: 2;
+  }
+
+  /* Pieces start pulled away from the board's centre and slide home */
+  .idea-card:nth-child(1) {
+    --from: translate(-60px, -40px);
+  }
+  .idea-card:nth-child(2) {
+    --from: translate(60px, -40px);
+  }
+  .idea-card:nth-child(3) {
+    --from: translate(-60px, 40px);
+  }
+  .idea-card:nth-child(4) {
+    --from: translate(60px, 40px);
+  }
+}
+
+@media (max-width: 1100px) {
+  .ideas__head {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  .ideas__title {
+    font-size: 34px;
+    white-space: normal;
+  }
+  .ideas__lede {
+    font-size: 17px;
+  }
+  .ideas {
+    padding-top: var(--section-pad-y);
+    padding-bottom: var(--section-pad-y);
+  }
+  .idea-card {
+    padding: 30px 26px 32px;
+    min-height: 0;
+  }
+  .idea-card h3 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 760px) {
+  .ideas__grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  /* The interlock only reads with two columns */
+  .idea-card:nth-child(even) {
+    margin-top: 0;
+  }
+}
+
+/* ===== Featured Book ===== */
+/* The panel is its own visual block, so it needs the full rhythm around
+   it rather than sitting flush against its neighbours. */
+.book {
+  padding-top: var(--section-pad-y);
+  padding-bottom: var(--section-pad-y);
+}
+
+.book__panel {
+  position: relative;
+  border-radius: 30px;
+  overflow: clip;
+  /* Base is now the dark end only — the teal comes from the drifting
+     glows above, so the panel's light actually moves. */
+  background: radial-gradient(140% 180% at 0% 0%, #123830 0%, #08161a 62%);
+  padding: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 64px;
+  min-height: 620px;
+}
+
+/* The cover arrives from the right rather than straight up, so it reads as
+   sliding out of the panel edge */
+.book__panel.reveal .book__cover {
+  opacity: 0;
+  transform: translateX(60px) rotate(4deg);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0.15s;
+}
+
+.book__panel.reveal.is-visible .book__cover {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book__panel.reveal .book__cover {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.book__panel::before,
+.book__panel::after {
+  content: "";
+  position: absolute;
+  width: 376px;
+  height: 376px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.book__panel::before {
+  left: -235px;
+  bottom: -40px;
+}
+
+.book__panel::after {
+  right: -160px;
+  top: -220px;
+}
+
+/* Two blurred blooms drifting inside the panel. Transform and opacity
+   only, so a 90px blur never repaints during the animation. */
+.book__glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+  will-change: transform;
+}
+
+.book__glow--1 {
+  width: 48%;
+  height: 78%;
+  left: -8%;
+  top: -18%;
+  background: rgba(30, 181, 158, 0.5);
+  animation: book-glow-1 9s ease-in-out infinite alternate;
+}
+
+.book__glow--2 {
+  width: 42%;
+  height: 70%;
+  right: 4%;
+  bottom: -24%;
+  background: rgba(79, 191, 168, 0.34);
+  animation: book-glow-2 13s ease-in-out infinite alternate;
+}
+
+/* 19s and 26s — no common factor, so the pair never resyncs */
+@keyframes book-glow-1 {
+  from {
+    transform: translate3d(-6%, 4%, 0) scale(0.9);
+    opacity: 0.7;
+  }
+  to {
+    transform: translate3d(22%, 26%, 0) scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes book-glow-2 {
+  from {
+    transform: translate3d(8%, -6%, 0) scale(1.15);
+    opacity: 0.95;
+  }
+  to {
+    transform: translate3d(-20%, -28%, 0) scale(0.88);
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book__glow {
+    animation: none;
+  }
+}
+
+/* Held to the left half so it clears the cropped cover behind it */
+.book__copy {
+  min-width: 0;
+  max-width: 54%;
+  position: relative;
+  z-index: 2;
+}
+
+.book__copy h2 {
+  font-size: clamp(28px, 3.5vw, 46px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+  margin-bottom: 14px;
+}
+
+.book__subtitle {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 21px;
+  line-height: 1.4;
+  color: rgba(249, 250, 251, 0.86);
+  max-width: 30ch;
+  margin-bottom: 14px;
+}
+
+/* Publisher line — small caps-ish UI type, the quietest thing in the block */
+.book__meta {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 26px;
+}
+
+.book__copy > p:not(.book__subtitle):not(.book__meta) {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.72;
+  color: rgba(249, 250, 251, 0.78);
+  max-width: 56ch;
+  margin-bottom: 28px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Endorsement — set off by a rule rather than a panel, so it reads as a
+   pull quote without competing with the title above it. */
+.book__quote {
+  border-left: 2px solid rgba(255, 255, 255, 0.22);
+  padding-left: 20px;
+  max-width: 52ch;
+  margin-bottom: 34px;
+}
+
+/* The one pull quote deliberately kept in Lato italic — it's a spoken
+   endorsement, not a heading */
+.book__quote blockquote {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.55;
+  color: rgba(249, 250, 251, 0.92);
+  margin-bottom: 10px;
+}
+
+.book__quote figcaption {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Solid white pill — scoped to this section so the ghost button elsewhere
+   keeps its translucent treatment */
+.book__copy .btn-ghost {
+  background: #fff;
+  border-color: #fff;
+  color: #0b0e20;
+  transition: background 0.25s ease, transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.book__copy .btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.88);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* Anchored to the panel's corner and deliberately oversized — the panel's
+   overflow: clip crops it, so the book runs off the frame rather than
+   sitting inside it with margin all round. */
+.book__cover {
+  position: absolute;
+  right: -70px;
+  bottom: -130px;
+  width: 660px;
+  max-width: none;
+  z-index: 1;
+  filter: drop-shadow(0 36px 52px rgba(0, 0, 0, 0.45));
+}
+
+@media (max-width: 1100px) {
+  .book__panel {
+    flex-direction: column;
+    padding: 40px 26px;
+    text-align: center;
+  }
+  .book__copy h2 {
+    font-size: 34px;
+    max-width: none;
+  }
+  .book__copy p,
+  .book__subtitle,
+  .book__quote {
+    max-width: none;
+  }
+  .book__quote {
+    border-left: 0;
+    border-top: 2px solid rgba(255, 255, 255, 0.22);
+    padding: 18px 0 0;
+  }
+  .book__copy {
+    max-width: none;
+  }
+  .book__cover {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 340px;
+  }
+}
+
+/* Phones: tighter still. At 26px the copy sat in a narrow column inside a
+   wide frame, which read as padding rather than as a panel. */
+@media (max-width: 620px) {
+  .book__panel {
+    padding: 32px 18px;
+    border-radius: 22px;
+  }
+  .book__copy h2 {
+    font-size: 28px;
+    line-height: 1.16;
+    margin-bottom: 10px;
+  }
+  .book__subtitle {
+    font-size: 17px;
+  }
+  .book__copy p {
+    font-size: 15.5px;
+    line-height: 1.62;
+  }
+  .book__quote {
+    padding-top: 14px;
+  }
+  .book__cover {
+    width: min(280px, 78vw);
+  }
+}
+
+/* ===== Trusted by (logos) ===== */
+.trusted {
+  text-align: center;
+}
+
+.trusted h2 {
+  font-size: 30px;
+  margin-bottom: 60px;
+}
+
+.trusted__logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 56px;
+  flex-wrap: wrap;
+}
+
+.trusted__logos img {
+  height: 40px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  opacity: 0.9;
+  filter: grayscale(0%);
+}
+
+.trusted__logos img.tall {
+  height: 48px;
+}
+
+.trusted__logos img.small {
+  height: 30px;
+}
+
+/* ===== Awards ===== */
+/* Colour handoff: the Experience section warms to violet at its foot, the
+   Awards section picks up in teal at its head. Both are large, very low
+   opacity washes, so scrolling between them reads as a shift in light
+   rather than two blocks of colour meeting. */
+.about::after,
+.awards::before,
+.awards .section-glow,
+.ideas::before,
+.ideas .section-glow,
+.book::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 160%;
+  height: 420px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Both sit flush inside their own section — .section uses overflow: clip,
+   so anything hanging past the edge would be cut off. Identical colour and
+   identical peak alpha, mirrored about the boundary: that match is what
+   removes the seam. Any difference in either shows as a hard line. */
+.about::after,
+.awards .section-glow,
+.ideas .section-glow {
+  bottom: 0;
+  background: radial-gradient(
+    50% 100% at 50% 100%,
+    rgba(117, 71, 255, 0.15) 0%,
+    rgba(117, 71, 255, 0) 72%
+  );
+}
+
+.awards::before,
+.ideas::before,
+.book::before {
+  top: 0;
+  background: radial-gradient(
+    50% 100% at 50% 0%,
+    rgba(117, 71, 255, 0.15) 0%,
+    rgba(117, 71, 255, 0) 72%
+  );
+}
+
+/* No colour handoff on the publications page — the panel is its own block
+   against a flat background, and any wash behind it read as a band. */
+.page-pubs .book::before {
+  display: none;
+}
+
+/* --- Book panel, publications page only ---------------------------------
+   Three adjustments against the homepage version:
+   1. more clearance above, so the panel isn't the first thing the floating
+      nav pill meets on the way down;
+   2. the base and both glows pulled towards #1eb59e — the emerald read as a
+      separate palette from the turquoise used by the tags and cards;
+   3. a shorter panel, since the copy left a large empty corner below the
+      button at 620px. */
+.page-pubs .book {
+  padding-top: calc(var(--section-pad-y) + 46px);
+}
+
+.page-pubs .book__panel {
+  background: radial-gradient(140% 180% at 0% 0%, #103330 0%, #091520 64%);
+  min-height: 540px;
+  padding: 84px;
+}
+
+.page-pubs .book__glow--1 {
+  background: rgba(30, 181, 158, 0.3);
+}
+
+.page-pubs .book__glow--2 {
+  background: rgba(64, 168, 176, 0.2);
+}
+
+@media (max-width: 1180px) {
+  .page-pubs .book__panel {
+    padding: 60px;
+    min-height: 0;
+  }
+}
+
+/* --- Footer, publications page only: green and turquoise blooms over a
+   teal base, matching this page rather than the violet homepage. --- */
+.page-pubs .footer {
+  background: linear-gradient(180deg, #14172d 0%, #102229 55%, #0d2b2c 100%);
+}
+
+.page-pubs .footer__glow--1 {
+  background: radial-gradient(
+    circle,
+    rgba(48, 214, 186, 0.8) 0%,
+    rgba(30, 181, 158, 0.34) 45%,
+    transparent 72%
+  );
+}
+
+.page-pubs .footer__glow--2 {
+  background: radial-gradient(
+    circle,
+    rgba(28, 150, 150, 0.68) 0%,
+    rgba(20, 96, 106, 0.28) 50%,
+    transparent 74%
+  );
+}
+
+.page-pubs .footer__glow--3 {
+  background: radial-gradient(
+    circle,
+    rgba(126, 232, 200, 0.5) 0%,
+    rgba(76, 211, 228, 0.2) 48%,
+    transparent 76%
+  );
+}
+
+/* The Awards section's outgoing wash. Geometry and colour come from the
+   shared rule above — it mirrors .about::after exactly, so the section is
+   bracketed by the same violet at both ends and hands off to the Featured
+   Book section as cleanly as it received from Experience.
+
+   The earlier version also painted violet across the top, which stacked on
+   .awards::before and made the incoming edge brighter than the outgoing
+   one on the Experience side — that mismatch was the visible seam. */
+
+.awards {
+  padding-bottom: var(--section-pad-y);
+}
+
+.awards__head {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 100px;
+}
+
+.awards__head .section-eyebrow {
+  justify-content: center;
+}
+
+/* Shared eyebrow — a glyph plus a tag */
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+/* The artwork carries its own blurred halo, so it needs a little negative
+   margin to sit optically level with the tag rather than pushed out by the
+   transparent glow around its edges. */
+/* Two animations at once: a slow continuous turn, plus a faster twinkle on
+   an unrelated period. Because 24s and 3.6s don't line up, the sparkle
+   never lands at the same angle twice. */
+.eyebrow-glyph {
+  width: 52px;
+  height: 52px;
+  margin: -6px -2px -6px -6px;
+  flex-shrink: 0;
+  animation: eyebrow-glyph-turn 24s linear infinite,
+    eyebrow-glyph-twinkle 3.6s ease-in-out infinite;
+}
+
+@keyframes eyebrow-glyph-turn {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes eyebrow-glyph-twinkle {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.75;
+    filter: drop-shadow(0 0 3px rgba(169, 165, 252, 0.35));
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(169, 165, 252, 0.75));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow-glyph {
+    animation: none;
+  }
+}
+
+/* --- Constellations (trophy on Awards, books on Publications) --- */
+.constellation {
+  width: 68px;
+  height: 68px;
+  margin: -8px -4px -8px -8px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.constellation--books {
+  width: 62px;
+  height: 62px;
+  margin: -6px 2px -6px -6px;
+}
+
+.constellation__lines path {
+  fill: none;
+  stroke: #7a8fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.55;
+  /* Dash and gap both longer than any path here. Running the offset from
+     +L to -L draws the line on, then peels it off from the tail, and
+     because the pattern repeats every 2L the loop closes on itself — no
+     fade, no jump back to the start. */
+  stroke-dasharray: 320 320;
+  stroke-dashoffset: 320;
+  animation: constellation-draw 7s linear infinite;
+}
+
+/* Each stroke group starts once the previous is part-way drawn */
+.constellation__lines path:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.constellation__lines path:nth-child(3) {
+  animation-delay: 0.75s;
+}
+.constellation__lines path:nth-child(4) {
+  animation-delay: 1s;
+}
+.constellation__lines path:nth-child(5) {
+  animation-delay: 1.25s;
+}
+
+@keyframes constellation-draw {
+  from {
+    stroke-dashoffset: 320;
+  }
+  to {
+    stroke-dashoffset: -320;
+  }
+}
+
+.constellation__dots circle {
+  fill: #b7c3ff;
+  animation: constellation-twinkle 3.2s ease-in-out infinite;
+}
+
+.constellation__dots circle:nth-child(odd) {
+  fill: #546be5;
+  animation-duration: 4.1s;
+}
+
+.constellation__dots circle:nth-child(3n) {
+  animation-delay: 0.9s;
+}
+.constellation__dots circle:nth-child(3n + 1) {
+  animation-delay: 1.7s;
+}
+
+@keyframes constellation-twinkle {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.constellation__sparks path {
+  fill: #c7d0ff;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: constellation-spark 5s ease-in-out infinite;
+}
+
+.constellation__sparks path:nth-child(2) {
+  animation-delay: 1.6s;
+}
+.constellation__sparks path:nth-child(3) {
+  animation-delay: 3.1s;
+}
+
+@keyframes constellation-spark {
+  0%,
+  100% {
+    opacity: 0.3;
+    scale: 0.7;
+  }
+  50% {
+    opacity: 0.85;
+    scale: 1.15;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .constellation__lines path {
+    stroke-dashoffset: 0;
+    opacity: 0.55;
+  }
+  .constellation__lines path,
+  .constellation__dots circle,
+  .constellation__sparks path {
+    animation: none;
+  }
+}
+
+/* Sized to hold on one line at this measure; the nowrap guarantees it and
+   the clamp scales it down rather than letting it break on narrower views */
+.awards__title {
+  font-size: clamp(28px, 3.6vw, 46px);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  margin: 0 auto 20px;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.awards__lede {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.6;
+  color: rgba(225, 225, 225, 0.72);
+  max-width: 62ch;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Marquee. Bleeds to the viewport edges and fades out at both sides, so
+   cards enter and leave rather than being chopped off. */
+.awards__marquee {
+  overflow: hidden;
+  margin-inline: calc(-1 * var(--section-pad-x));
+  padding-block: 8px;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+}
+
+.awards__track,
+.marquee-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  padding-inline: var(--section-pad-x);
+  animation: awards-marquee var(--marquee-dur, 60s) linear infinite;
+}
+
+.domains__marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.awards__marquee:hover .awards__track {
+  animation-play-state: paused;
+}
+
+/* Shifted by half the track plus half a gap — the duplicated set makes the
+   loop seamless, and the extra 10px accounts for the gap that sits between
+   the two halves but isn't counted in a plain -50%. */
+@keyframes awards-marquee {
+  to {
+    transform: translateX(calc(-50% - 10px));
+  }
+}
+
+.award-card {
+  position: relative;
+  flex: 0 0 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: linear-gradient(
+    168deg,
+    color-mix(in srgb, var(--accent) 10%, transparent) 0%,
+    rgba(10, 13, 30, 0.32) 62%
+  );
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.award-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px -18px color-mix(in srgb, var(--accent) 75%, transparent);
+}
+
+/* Border shimmer: a conic gradient confined to a 1px ring by masking out
+   the content box, with the gradient's start angle animated. Needs
+   @property, since custom properties are otherwise not interpolatable. */
+@property --shimmer-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.award-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--shimmer-angle),
+    transparent 0%,
+    color-mix(in srgb, var(--accent) 70%, transparent) 8%,
+    #ffffff 14%,
+    color-mix(in srgb, var(--accent) 70%, transparent) 20%,
+    transparent 34%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: award-border-shimmer var(--shimmer-dur, 5s) linear infinite;
+  animation-delay: var(--shimmer-delay, 0s);
+  animation-direction: var(--shimmer-dir, normal);
+  pointer-events: none;
+}
+
+@keyframes award-border-shimmer {
+  to {
+    --shimmer-angle: 360deg;
+  }
+}
+
+.award-card__mark {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 4px;
+  border-radius: 14px;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  box-shadow: inset 0 0 18px -8px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+
+.award-card__mark svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Fixed stage, identical on every card, with the logo centred inside it.
+   No plate or fill — the marks carry their own shape. */
+.award-card__mark--logo {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 132px;
+  place-items: center;
+  padding: 0 26px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* Contain fits each logo to its bounding box, but bounding boxes of wildly
+   different proportions don't read as the same size — a 5:1 wordmark looks
+   slight next to a 1.6:1 mark at equal height. --logo-scale trims each one
+   so the *optical* weight matches across the row. */
+.award-card__mark--logo img {
+  max-width: 84%;
+  max-height: calc(62px * var(--logo-scale, 1));
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Frosted band at the foot of the card — the same treatment the original
+   award graphics used for the year. */
+.award-card__body {
+  /* Fixed height, contents centred — titles run to one or two lines and a
+     shrink-to-fit band would leave the strips at different depths across
+     the row. The logo area above absorbs the difference. */
+  height: 116px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 14px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Both clamp at two lines, so an unusually long name can't push the band
+   out of shape */
+.award-card h3,
+.award-card p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.award-card h3 {
+  font-size: 16px;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.award-card p {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(225, 225, 225, 0.68);
+}
+
+@media (max-width: 1100px) {
+  .awards__lede {
+    font-size: 17px;
+  }
+  .award-card {
+    flex: 0 0 240px;
+  }
+}
+
+@media (max-width: 560px) {
+  .award-card {
+    flex: 0 0 220px;
+  }
+  /* Too narrow to hold one line even at the clamp's floor */
+  .awards__title {
+    white-space: normal;
+    font-size: 30px;
+  }
+}
+
+/* ===== Publications page ===== */
+/* Shares the homepage hero wholesale — stars, aurora, cursor orb and the
+   curved horizon — just shorter, since it heads a page rather than opening
+   the site. The h1 is smaller for the same reason. */
+/* Full viewport height, same as the homepage hero */
+.hero--page {
+  padding-top: 120px;
+  padding-bottom: calc(60px + var(--horizon-drop));
+}
+
+.hero--page h1 {
+  font-size: clamp(34px, 5.4vw, 68px);
+}
+
+.hero--page p {
+  font-size: 21px;
+  max-width: 64ch;
+}
+
+/* Second paragraph in a page hero: a step down in size and weight, so the
+   opening statement still leads and the hero doesn't read as a wall. */
+.hero--page .hero__note {
+  margin-top: 18px;
+  font-size: 17px;
+  line-height: 1.65;
+  color: rgba(225, 225, 225, 0.62);
+  max-width: 72ch;
+}
+
+@media (max-width: 900px) {
+  .hero--page .hero__note {
+    font-size: 15.5px;
+  }
+}
+
+.hero--page .section-eyebrow {
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+/* Page background set once on the body, not per section — setting it
+   section by section left the untouched ones (the book panel's section)
+   showing the site-wide colour, which drew a hard line at the boundary. */
+.page-pubs {
+  background: #14172d;
+  /* Tighter rhythm than the homepage — this page has fewer, denser
+     sections, so the full 150px left them feeling adrift. */
+  --section-pad-y: 105px;
+}
+
+.page-pubs .footer {
+  padding-top: 130px;
+}
+
+/* The horizon's fill has to match, or the arc shows as a lighter shape */
+.page-pubs .hero--page::after {
+  background: #14172d;
+}
+
+/* --- Green/turquoise atmosphere, so this page reads differently from the
+   violet homepage. Same layers, different palette. --- */
+.page-pubs .hero--page .hero__aurora::before {
+  background: radial-gradient(
+      46% 100% at 34% 100%,
+      rgba(30, 181, 158, 0.3) 0%,
+      rgba(30, 181, 158, 0) 70%
+    ),
+    radial-gradient(
+      34% 88% at 74% 100%,
+      rgba(76, 211, 228, 0.2) 0%,
+      rgba(76, 211, 228, 0) 72%
+    );
+}
+
+.page-pubs .hero--page .hero__aurora::after {
+  background: radial-gradient(
+      38% 96% at 64% 100%,
+      rgba(79, 208, 122, 0.18) 0%,
+      rgba(79, 208, 122, 0) 72%
+    ),
+    radial-gradient(
+      30% 84% at 20% 100%,
+      rgba(112, 226, 208, 0.14) 0%,
+      rgba(112, 226, 208, 0) 74%
+    );
+}
+
+/* Horizon edge and its glow, matched to the aurora */
+.page-pubs .hero--page::after {
+  box-shadow: 0 -1px 0 0 rgb(140 240 214 / calc(0.5 * var(--horizon-glow))),
+    0 -10px 40px -6px rgb(30 181 158 / calc(0.5 * var(--horizon-glow))),
+    0 -60px 120px -20px rgb(30 181 158 / calc(0.34 * var(--horizon-glow)));
+}
+
+/* Cursor orb picks up the same green */
+.page-pubs .hero--page .hero__deco {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 8px rgba(30, 181, 158, 0.3), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* Tag matches the page's turquoise rather than the site-wide violet */
+.page-pubs .hero--page .tag {
+  color: #7fe3d0;
+  border-color: rgba(30, 181, 158, 0.45);
+  background: rgba(30, 181, 158, 0.14);
+}
+
+/* Constellation in turquoise rather than the Awards blue */
+.constellation--books .constellation__lines path {
+  stroke: #5fd8c4;
+}
+
+.constellation--books .constellation__dots circle {
+  fill: #a7f0e0;
+}
+
+.constellation--books .constellation__dots circle:nth-child(odd) {
+  fill: #1eb59e;
+}
+
+.constellation--books .constellation__sparks path {
+  fill: #b8f0e4;
+}
+
+@media (max-width: 900px) {
+  .hero--page {
+    padding-top: 80px;
+  }
+  .hero--page h1 {
+    font-size: 40px;
+  }
+  .hero--page p {
+    font-size: 18px;
+  }
+}
+
+/* Selected writing — banner rows, each linking out */
+.pubs-list {
+  display: grid;
+  gap: 16px;
+}
+
+.pub-card {
+  position: relative;
+  display: block;
+  padding: 30px 84px 30px 34px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--accent) 13%, transparent) 0%,
+    rgba(11, 14, 32, 0.55) 52%
+  );
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Accent spine down the leading edge */
+.pub-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 75%, transparent);
+}
+
+/* Softer, wider drop shadow plus an accent-coloured bloom, so the card
+   lifts on a halo of its own colour rather than a hard dark edge. */
+.pub-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  box-shadow: 0 22px 60px -30px rgba(0, 0, 0, 0.5),
+    0 0 46px -14px color-mix(in srgb, var(--accent) 55%, transparent),
+    0 0 90px -30px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.pub-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.pub-card__type {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.pub-card__date {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.pub-card h3 {
+  font-size: 22px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+  max-width: 62ch;
+}
+
+.pub-card__source {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  color: rgba(225, 225, 225, 0.62);
+}
+
+.pub-card__arrow {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-top: -19px;
+  border-radius: 50%;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.pub-card__arrow svg {
+  width: 17px;
+  height: 17px;
+}
+
+.pub-card:hover .pub-card__arrow {
+  transform: translateX(4px);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+@media (max-width: 700px) {
+  .pub-card {
+    padding: 24px 24px 68px;
+  }
+  .pub-card h3 {
+    font-size: 19px;
+  }
+  .pub-card__arrow {
+    top: auto;
+    bottom: 22px;
+    right: auto;
+    left: 24px;
+    margin-top: 0;
+  }
+}
+
+.pubs-areas__head {
+  margin-bottom: 44px;
+}
+
+.pubs-areas__head h2 {
+  font-size: clamp(27px, 3.2vw, 40px);
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+.pubs-areas__head p {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 18px;
+  color: rgba(225, 225, 225, 0.7);
+}
+
+/* Board holds the wire layer behind the grid */
+.pubs-areas__board {
+  position: relative;
+}
+
+.pubs-areas__wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.pubs-areas__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  list-style: none;
+}
+
+.area-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 26px 24px 28px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Opaque enough to hide the wires running behind, so only the segments
+     crossing the gutters show */
+  background: linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--accent) 16%, transparent) 0%,
+      transparent 62%
+    ),
+    #171a32;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.area-card__icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  box-shadow: inset 0 0 18px -8px color-mix(in srgb, var(--accent) 85%, transparent);
+}
+
+.area-card__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.area-card h3 {
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.35;
+  color: rgba(249, 250, 251, 0.92);
+  margin-top: auto;
+}
+
+.area-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  box-shadow: 0 14px 34px -18px color-mix(in srgb, var(--accent) 75%, transparent);
+}
+
+/* Wires between neighbouring cards */
+.area-wire {
+  fill: none;
+  stroke: rgba(120, 220, 205, 0.3);
+  stroke-width: 1.2;
+}
+
+.area-wire-pulse {
+  fill: none;
+  stroke: #8ff0dc;
+  stroke-width: 2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 5px rgba(120, 226, 208, 0.9));
+}
+
+.area-node {
+  fill: #8ff0dc;
+  filter: drop-shadow(0 0 5px rgba(120, 226, 208, 0.8));
+}
+
+@media (max-width: 1100px) {
+  .pubs-areas__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .pubs-areas__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .pubs-areas__head h2 {
+    font-size: 30px;
+  }
+}
+
+/* ===== Press & Media ===== */
+/* Horizontal rail. Bleeds to the viewport edges like the marquees, but this
+   one is user-driven — native overflow scrolling with snap points, so a
+   trackpad swipe, a drag and the arrow buttons all land the same way. */
+.press__rail {
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-inline: calc(-1 * var(--section-pad-x));
+  padding-block: 6px 10px;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 5%,
+    #000 95%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 5%,
+    #000 95%,
+    transparent 100%
+  );
+}
+
+.press__rail::-webkit-scrollbar {
+  display: none;
+}
+
+.press__track {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  padding-inline: var(--section-pad-x);
+}
+
+.press-card {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s ease, background 0.3s ease;
+}
+
+.press-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(30, 181, 158, 0.42);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Fixed 3:2 frame, so cards stay the same height whatever the source crop */
+.press-card__media {
+  display: block;
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: #0e1226;
+}
+
+/* Held back at half opacity so the row reads as a quiet band; the card
+   under the cursor comes up to full. */
+.press-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.5;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s ease;
+}
+
+.press-card:hover .press-card__media img,
+.press-card:focus-visible .press-card__media img {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.press-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 22px 22px;
+  flex: 1;
+}
+
+.press-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.press-card__outlet {
+  color: #6fe3cd;
+}
+
+.press-card__date {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.press-card__date::before {
+  content: "·";
+  margin-right: 10px;
+}
+
+.press-card__title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 1.34;
+  letter-spacing: -0.01em;
+  color: var(--white-smoke);
+  /* Three lines keeps every card the same height without hard-cropping
+     mid-word on the shorter headlines. */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.press-card__cue {
+  margin-top: auto;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.25s ease;
+}
+
+.press-card:hover .press-card__cue {
+  color: #6fe3cd;
+}
+
+.press__nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.press__arrow {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+}
+
+.press__arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.press__arrow:hover {
+  border-color: rgba(30, 181, 158, 0.5);
+  background: rgba(30, 181, 158, 0.12);
+  color: #ffffff;
+}
+
+.press__arrow[disabled] {
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press__rail {
+    scroll-behavior: auto;
+  }
+  .press-card,
+  .press-card__media img {
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .press-card {
+    width: 264px;
+  }
+  .press-card__title {
+    font-size: 17px;
+  }
+}
+
+/* ===== Technology R&D ===== */
+/* Company panel first, then the projects it produced — the indent and the
+   rule on the label mark that hierarchy without another heading level. */
+.rnd__intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  padding: 26px 28px;
+  border-radius: 20px;
+  border: 1px solid rgba(30, 181, 158, 0.24);
+  background: linear-gradient(
+    135deg,
+    rgba(30, 181, 158, 0.1),
+    rgba(255, 255, 255, 0.02) 60%
+  );
+}
+
+.rnd__globe {
+  flex: 0 0 auto;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(30, 181, 158, 0.35);
+  color: #6fe3cd;
+}
+
+.rnd__globe img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.rnd__intro-text h3 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: var(--white-smoke);
+  margin-bottom: 10px;
+}
+
+.rnd__intro-text h3 span {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6fe3cd;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(30, 181, 158, 0.4);
+  background: rgba(30, 181, 158, 0.1);
+}
+
+.rnd__intro-text p {
+  max-width: 62ch;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(225, 225, 225, 0.72);
+}
+
+/* Pushed to the far right and nudged onto the title's line, so the panel
+   stays one row tall instead of adding a third line under the paragraph. */
+.rnd__cta {
+  flex: 0 0 auto;
+  margin-left: auto;
+  margin-top: 4px;
+  padding: 11px 20px;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .rnd__cta {
+    margin-left: 0;
+    margin-top: 0;
+  }
+}
+
+.rnd__label {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 52px 0 24px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+/* Rule that fills whatever space the label leaves */
+.rnd__label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rnd__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.rnd-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px 28px 24px;
+  border-radius: 20px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.035);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rnd-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--accent) 48%, transparent);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 22px 48px -28px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+/* Funder marks arrive at different sizes; a fixed box keeps them level */
+.rnd-card__funder {
+  display: flex;
+  align-items: center;
+  height: 26px;
+}
+
+.rnd-card__funder img {
+  max-height: 26px;
+  max-width: 132px;
+  width: auto;
+  opacity: 0.62;
+  transition: opacity 0.3s ease;
+}
+
+.rnd-card:hover .rnd-card__funder img {
+  opacity: 0.95;
+}
+
+.rnd-card__funder--text {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.rnd-card h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--white-smoke);
+}
+
+.rnd-card p {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: rgba(225, 225, 225, 0.66);
+}
+
+.rnd-card__cue {
+  margin-top: auto;
+  padding-top: 6px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.25s ease;
+}
+
+.rnd-card:hover .rnd-card__cue {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rnd-card {
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .rnd__grid {
+    grid-template-columns: 1fr;
+  }
+  .rnd__intro {
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px 20px;
+  }
+}
+
+/* ===== Work & Engagements ===== */
+.work {
+  background: var(--bg-panel);
+  padding-top: calc(var(--section-pad-y) + 40px);
+}
+
+/* The two curves sweep out of the tag and back into it, so the pair reads
+   as one mark rather than an icon sitting beside a pill. */
+.work__eyebrow {
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.flow-lines {
+  width: 46px;
+  height: 54px;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.flow-lines path {
+  fill: none;
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+}
+
+.flow-lines__base {
+  opacity: 0.75;
+}
+
+/* Bright dash travelling each curve. Dash and gap both exceed the path
+   length, so running the offset from +L to -L draws it on and peels it
+   off in one seamless loop. */
+.flow-lines__pulse {
+  stroke: #b9adff;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 40 260;
+  stroke-dashoffset: 300;
+  filter: drop-shadow(0 0 4px rgba(148, 116, 255, 0.9));
+  animation: flow-lines-travel 4.2s linear infinite;
+}
+
+.flow-lines__pulse--b {
+  animation-duration: 5.6s;
+  animation-delay: 1.1s;
+}
+
+@keyframes flow-lines-travel {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+.work__eyebrow .tag {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-lines__pulse {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.work h2 {
+  font-size: clamp(30px, 4.4vw, 60px);
+  margin-bottom: 80px;
+}
+
+.work__panel {
+  display: flex;
+  border: 0.5px solid var(--border-soft);
+  border-radius: 30px;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+
+.work__accordion {
+  flex: 1 1 610px;
+  min-width: 0;
+}
+
+.work__item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.work__item:last-child {
+  border-bottom: none;
+}
+
+.work__item-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 32px 24px;
+  text-align: left;
+}
+
+.work__item-head h3 {
+  font-size: 28px;
+  color: var(--white-smoke);
+  min-width: 0;
+}
+
+/* Open item's title takes that item's own accent, matching the artwork */
+.work__item.active .work__item-head h3 {
+  color: var(--accent, var(--pink));
+}
+
+.work__item-head h3 {
+  transition: color 0.35s ease;
+}
+
+.work__item-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.work__item-icon::before,
+.work__item-icon::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.work__item-icon::before {
+  width: 18px;
+  height: 2px;
+}
+
+.work__item-icon::after {
+  width: 2px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+
+.work__item.active .work__item-icon::after {
+  transform: translate(-50%, -50%) scaleY(0);
+}
+
+.work__item-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.work__item.active .work__item-body {
+  max-height: 200px;
+}
+
+.work__item-body p {
+  padding: 0 24px 32px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 32px;
+  color: var(--white-smoke);
+}
+
+/* Backdrop is mixed from the open item's accent, so it shifts with the
+   artwork instead of staying pink for every panel. */
+.work__visual {
+  flex: 1 1 610px;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    194deg,
+    color-mix(in srgb, var(--accent, #f850b7) 40%, transparent) 10%,
+    rgba(18, 22, 45, 0) 100%
+  );
+  transition: background 0.5s ease;
+}
+
+/* Capped on height as well as width — the artworks have very different
+   aspect ratios, and a width-only rule made the tall portrait one tower
+   over the square ones. */
+.work__visual img {
+  width: auto;
+  height: auto;
+  max-width: 62%;
+  max-height: 320px;
+  object-fit: contain;
+  transition: opacity 0.22s ease, transform 0.35s ease;
+}
+
+/* Held during the src swap so the change never flickers */
+.work__visual.is-swapping img {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+/* Per-item artwork, hidden on desktop where the shared panel on the right
+   already shows it. */
+.work__item-visual {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .work__panel {
+    flex-direction: column;
+  }
+  .work h2 {
+    font-size: 38px;
+  }
+
+  /* Stacked, the single shared panel ended up at the very bottom of the
+     section, far from the item it illustrates. Each item carries its own
+     copy instead, so the artwork opens directly under its own text. */
+  .work__visual {
+    display: none;
+  }
+
+  .work__item-visual {
+    display: flex;
+    justify-content: center;
+    padding: 4px 24px 34px;
+  }
+
+  .work__item-visual img {
+    width: auto;
+    max-width: 58%;
+    max-height: 200px;
+    object-fit: contain;
+  }
+
+  /* The tinted panel starts at the divider, so the copy needs its own top
+     inset — without it the first line sat right on the edge. */
+  .work__item-body p {
+    padding-top: 22px;
+  }
+
+  /* Room for the artwork as well as the paragraph */
+  .work__item.active .work__item-body {
+    max-height: 640px;
+    background: linear-gradient(
+      194deg,
+      color-mix(in srgb, var(--accent, #f850b7) 32%, transparent) 0%,
+      rgba(18, 22, 45, 0) 78%
+    );
+  }
+}
+
+/* ===== Footer ===== */
+/* Dark at the top, light rising from the bottom edge — the glow itself is
+   the three drifting blooms below rather than a fixed gradient stop. */
+.footer {
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
+  /* Starts on the exact colour of the Work section above, so the two meet
+     with no visible step, then warms into the violet at the base. */
+  background: linear-gradient(
+    180deg,
+    var(--bg-panel) 0%,
+    #13132f 52%,
+    #170e3b 100%
+  );
+  padding-top: 180px;
+  padding-bottom: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+/* Blooms sit low and wide, so only their upper shoulder reads — that's
+   what gives the light a horizon rather than a visible edge. */
+/* One dimmer for every bloom on every page: the individual gradients were
+   tuned relative to each other, so scaling them together keeps the balance
+   while taking the overall intensity down. Raise towards 1 to brighten. */
+.footer__glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.52;
+  will-change: transform;
+}
+
+.footer__glow--1 {
+  width: 80%;
+  height: 78%;
+  left: 8%;
+  bottom: -46%;
+  background: radial-gradient(
+    circle,
+    rgba(167, 108, 255, 0.85) 0%,
+    rgba(117, 71, 255, 0.35) 45%,
+    transparent 72%
+  );
+  filter: blur(70px);
+  animation: footer-glow-1 7s ease-in-out infinite alternate;
+}
+
+.footer__glow--2 {
+  width: 62%;
+  height: 62%;
+  left: -12%;
+  bottom: -34%;
+  background: radial-gradient(
+    circle,
+    rgba(90, 60, 220, 0.7) 0%,
+    rgba(52, 32, 140, 0.28) 50%,
+    transparent 74%
+  );
+  filter: blur(80px);
+  animation: footer-glow-2 10s ease-in-out infinite alternate;
+}
+
+.footer__glow--3 {
+  width: 54%;
+  height: 54%;
+  right: -8%;
+  bottom: -30%;
+  background: radial-gradient(
+    circle,
+    rgba(206, 150, 255, 0.55) 0%,
+    rgba(140, 90, 245, 0.2) 48%,
+    transparent 76%
+  );
+  filter: blur(90px);
+  animation: footer-glow-3 13s ease-in-out infinite alternate;
+}
+
+/* 15s / 21s / 27s — the light never settles into a repeating shape */
+@keyframes footer-glow-1 {
+  from {
+    transform: translate3d(-9%, 4%, 0) scale(0.9);
+    opacity: 0.8;
+  }
+  to {
+    transform: translate3d(9%, -6%, 0) scale(1.14);
+    opacity: 1;
+  }
+}
+
+@keyframes footer-glow-2 {
+  from {
+    transform: translate3d(6%, -5%, 0) scale(1.12);
+    opacity: 0.9;
+  }
+  to {
+    transform: translate3d(-10%, 6%, 0) scale(0.88);
+    opacity: 0.55;
+  }
+}
+
+@keyframes footer-glow-3 {
+  from {
+    transform: translate3d(4%, 6%, 0) scale(0.94);
+    opacity: 0.55;
+  }
+  to {
+    transform: translate3d(-12%, -8%, 0) scale(1.18);
+    opacity: 0.95;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer__glow {
+    animation: none;
+  }
+}
+
+.footer__logo img {
+  height: 46px;
+}
+
+.footer__links {
+  display: flex;
+  gap: 60px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.footer__col h4 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 300;
+  margin-bottom: 12px;
+}
+
+.footer__col a {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 8px;
+}
+
+@media (max-width: 700px) {
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ===== Legal pages (terms, privacy) =====
+   Plain long-form prose. Styling hangs off elements rather than classes, so
+   pasted copy picks it up without needing to be marked up first. */
+.page-legal {
+  background: #14172d;
+  --section-pad-y: 90px;
+}
+
+.legal {
+  padding-top: calc(var(--nav-h) + 70px);
+}
+
+.legal__head {
+  max-width: 760px;
+  margin-bottom: 48px;
+}
+
+.legal__eyebrow {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+  margin-bottom: 20px;
+}
+
+.legal__head h1 {
+  font-size: clamp(32px, 4vw, 50px);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.legal__updated {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Opening statement, set slightly larger than the body it introduces */
+.legal__lede {
+  font-size: 18px;
+  line-height: 1.75;
+  color: rgba(240, 240, 245, 0.85);
+  margin-bottom: 6px;
+}
+
+/* Publisher and hosting details: a definition list rather than prose, so
+   each required item is unambiguously labelled. */
+.legal__facts {
+  margin-top: 6px;
+}
+
+.legal__facts dt {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 20px;
+}
+
+.legal__facts dd {
+  margin: 4px 0 0;
+  color: rgba(240, 240, 245, 0.82);
+}
+
+/* Still-missing detail, flagged so it can't be published unnoticed */
+.legal__facts dd.is-todo {
+  color: rgba(240, 205, 150, 0.9);
+  font-family: var(--font-ui);
+  font-size: 14px;
+}
+
+.legal__body {
+  max-width: 720px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16.5px;
+  line-height: 1.8;
+  color: rgba(225, 225, 225, 0.7);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.legal__body h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 21px;
+  letter-spacing: -0.01em;
+  color: var(--white-smoke);
+  margin: 42px 0 12px;
+}
+
+.legal__body h2:first-of-type {
+  margin-top: 0;
+}
+
+.legal__body p + p,
+.legal__body ul {
+  margin-top: 14px;
+}
+
+.legal__body ul {
+  padding-left: 20px;
+}
+
+.legal__body li + li {
+  margin-top: 8px;
+}
+
+.legal__body a {
+  color: #a8b6ff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(168, 182, 255, 0.4);
+}
+
+.legal__body a:hover {
+  color: #ffffff;
+}
+
+/* ===== Contact page =====
+   Plum (#a82c7f) at low opacity throughout. Kept deliberately quiet — the
+   colour is atmosphere here, not the subject. */
+/* ============================================================
+   ABOUT PAGE
+   Indigo identity. Same page furniture as Selected Work and Contact —
+   only the accent, the hero glows and the constellation change.
+   ============================================================ */
+.page-about {
+  --indigo: #4a7dff;
+  --indigo-light: #93b3ff;
+  background: #14172d;
+  /* Denser than the homepage: fewer, longer sections */
+  --section-pad-y: 110px;
+}
+
+.page-about .footer {
+  padding-top: 130px;
+}
+
+/* The horizon's fill has to match the page, or the arc reads as a shape */
+.page-about .hero--page::after {
+  background: #14172d;
+  box-shadow: 0 -1px 0 0 rgb(160 190 255 / calc(0.4 * var(--horizon-glow))),
+    0 -10px 40px -6px rgb(74 125 255 / calc(0.36 * var(--horizon-glow))),
+    0 -60px 120px -20px rgb(74 125 255 / calc(0.24 * var(--horizon-glow)));
+}
+
+.page-about .hero--page .hero__aurora::before {
+  background: radial-gradient(
+      46% 100% at 34% 100%,
+      rgba(74, 125, 255, 0.26) 0%,
+      rgba(74, 125, 255, 0) 70%
+    ),
+    radial-gradient(
+      34% 88% at 74% 100%,
+      rgba(110, 96, 235, 0.17) 0%,
+      rgba(110, 96, 235, 0) 72%
+    );
+}
+
+.page-about .hero--page .hero__aurora::after {
+  background: radial-gradient(
+      38% 96% at 64% 100%,
+      rgba(147, 179, 255, 0.15) 0%,
+      rgba(147, 179, 255, 0) 72%
+    ),
+    radial-gradient(
+      30% 84% at 20% 100%,
+      rgba(74, 125, 255, 0.12) 0%,
+      rgba(74, 125, 255, 0) 74%
+    );
+}
+
+.page-about .hero--page .hero__deco {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 8px rgba(74, 125, 255, 0.28), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.page-about .tag {
+  color: #a8c2ff;
+  border-color: rgba(74, 125, 255, 0.5);
+  background: rgba(74, 125, 255, 0.14);
+}
+
+.page-about .constellation__lines path {
+  stroke: #6f96ff;
+}
+
+.page-about .constellation__dots circle {
+  fill: #c3d5ff;
+}
+
+.page-about .constellation__dots circle:nth-child(odd) {
+  fill: #4a7dff;
+}
+
+.page-about .constellation__sparks path {
+  fill: #cfdcff;
+}
+
+.page-about .footer__glow--1 {
+  background: radial-gradient(
+    circle,
+    rgba(96, 140, 255, 0.72) 0%,
+    rgba(74, 125, 255, 0.3) 45%,
+    transparent 72%
+  );
+}
+
+.page-about .footer__glow--2 {
+  background: radial-gradient(
+    circle,
+    rgba(120, 106, 235, 0.6) 0%,
+    rgba(74, 90, 190, 0.24) 50%,
+    transparent 74%
+  );
+}
+
+.page-about .footer {
+  background: linear-gradient(180deg, #14172d 0%, #161c36 55%, #171f43 100%);
+}
+
+/* --- Portrait + opening --- */
+.bio__layout {
+  display: grid;
+  grid-template-columns: 400px minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
+}
+
+/* Rounded frame with a soft indigo bloom behind it, so the photograph sits
+   in the page rather than on top of it. */
+.bio__portrait {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.85),
+    0 0 60px -20px rgba(74, 125, 255, 0.35);
+}
+
+.bio__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Matches the homepage treatment: hue from the gradient, luminance from the
+   photograph, so it reads as a duotone rather than a coloured filter. */
+.bio__portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(150deg, #4a7dff 0%, #7061e8 60%, #4a7dff 100%);
+  mix-blend-mode: color;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.bio__copy {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: rgba(225, 225, 225, 0.68);
+  font-size: 16.5px;
+  line-height: 1.78;
+  max-width: 62ch;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bio__copy p + p {
+  margin-top: 20px;
+}
+
+.bio__lead {
+  font-size: clamp(19px, 1.9vw, 23px);
+  line-height: 1.6;
+  color: var(--white-smoke);
+}
+
+.bio__langs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 34px !important;
+  padding-top: 26px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.bio__langs-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* --- Career timeline --- */
+/* The rail runs down the gutter between the logo column and the copy, not
+   through the logos. One variable places the rail, the nodes and the
+   progress bar, so they can never drift apart. */
+.timeline-wrap {
+  --tl-logo-w: 160px;
+  --tl-gap: 56px;
+  --tl-rail: calc(var(--tl-logo-w) + var(--tl-gap) / 2);
+  position: relative;
+}
+
+.timeline__rail {
+  position: absolute;
+  left: var(--tl-rail);
+  top: 12px;
+  bottom: 12px;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 255, 255, 0.12) 6%,
+    rgba(255, 255, 255, 0.12) 94%,
+    transparent
+  );
+}
+
+/* Filled portion. Driven by scaleY from JS rather than height, so the
+   browser can keep it on the compositor while scrolling. */
+.timeline__progress {
+  position: absolute;
+  inset: 0;
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  background: linear-gradient(
+    180deg,
+    rgba(74, 125, 255, 0.15),
+    var(--indigo) 12%,
+    var(--indigo-light)
+  );
+  box-shadow: 0 0 12px rgba(74, 125, 255, 0.65);
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.tl {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--tl-logo-w) minmax(0, 1fr);
+  gap: 0 var(--tl-gap);
+  padding: 34px 0;
+}
+
+.tl + .tl {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Node sitting on the rail. Dim until the scroll indicator passes it. */
+.tl__marker {
+  position: absolute;
+  left: var(--tl-rail);
+  top: 44px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: #2b3358;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.03);
+  transition: background 0.35s ease, box-shadow 0.35s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tl__marker.is-reached {
+  background: var(--indigo-light);
+  box-shadow: 0 0 0 5px rgba(74, 125, 255, 0.18),
+    0 0 16px rgba(74, 125, 255, 0.75);
+  transform: scale(1.25);
+}
+
+/* The copy fades up as its node is reached */
+.tl__logo,
+.tl__body {
+  opacity: 0.42;
+  transition: opacity 0.5s ease;
+}
+
+.tl.is-reached .tl__logo,
+.tl.is-reached .tl__body {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tl__marker,
+  .tl__logo,
+  .tl__body {
+    transition: none;
+  }
+  /* No scroll-linked reveal — everything is legible from the start */
+  .tl__logo,
+  .tl__body {
+    opacity: 1;
+  }
+  .timeline__progress {
+    transform: scaleY(1);
+  }
+}
+
+.tl__logo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 46px;
+  margin-top: 2px;
+}
+
+/* Per-logo height, set inline: these marks arrive at very different
+   proportions, so one shared max-height leaves some looking undersized. */
+.tl__logo img {
+  max-height: var(--tl-h, 38px);
+  max-width: 156px;
+  width: auto;
+  opacity: 0.72;
+}
+
+.tl__body h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: var(--white-smoke);
+  margin-bottom: 8px;
+}
+
+.tl__roles {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.7;
+  color: #93b3ff;
+  margin-bottom: 14px;
+}
+
+.tl__body > p:last-of-type {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.72;
+  color: rgba(225, 225, 225, 0.64);
+  max-width: 62ch;
+}
+
+.tl__link {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--indigo-light);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.tl__link:hover {
+  color: #ffffff;
+}
+
+/* --- Research panel --- */
+.research__panel {
+  position: relative;
+  border-radius: 26px;
+  overflow: clip;
+  padding: 60px 64px;
+  border: 1px solid rgba(74, 125, 255, 0.22);
+  background: radial-gradient(120% 160% at 0% 0%, #1b2550 0%, #101529 66%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 56px;
+  align-items: center;
+}
+
+.research__copy {
+  max-width: 66ch;
+}
+
+/* The book runs off the panel edge, like the featured-book block elsewhere:
+   the panel's overflow: clip crops it, so it reads as an object continuing
+   past the frame rather than a picture placed inside it. The grid column it
+   would have occupied is left as a spacer, keeping the copy clear of it. */
+.research__visual {
+  position: absolute;
+  right: -60px;
+  bottom: -90px;
+  width: clamp(320px, 34vw, 470px);
+  pointer-events: none;
+}
+
+.research__visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: rotate(-8deg);
+  filter: drop-shadow(-18px 26px 44px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 56px rgba(74, 125, 255, 0.24));
+}
+
+/* Veil in the panel's own colours, so the cover sinks into the background
+   instead of sitting on top of it. Inset is negative to cover the rotated
+   corners, and the blur softens the edge where the two meet. */
+.research__visual::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background: radial-gradient(
+    70% 70% at 28% 24%,
+    rgba(27, 37, 80, 0) 0%,
+    rgba(20, 26, 55, 0.42) 52%,
+    rgba(16, 21, 41, 0.78) 100%
+  );
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+  pointer-events: none;
+}
+
+.research__copy .tag {
+  display: inline-block;
+  margin-bottom: 22px;
+}
+
+/* Measure has to clear the longer of the two halves ("of markets, policy
+   and technology"), or the explicit break turns two lines into four. */
+.research__copy h2 {
+  font-size: clamp(26px, 2.6vw, 33px);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  max-width: none;
+}
+
+.research__copy p {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.75;
+  color: rgba(225, 225, 225, 0.7);
+}
+
+.research__book {
+  margin-top: 14px;
+  color: rgba(225, 225, 225, 0.58) !important;
+}
+
+.research__book cite {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.research__copy .btn {
+  margin-top: 30px;
+}
+
+/* --- Education band --- */
+/* The homepage version is indented to line up with a numbered list; here
+   there's no gutter to match, so it sits flush to the section edge. */
+.unis--flush {
+  margin: 0;
+}
+
+
+@media (max-width: 1100px) {
+  .bio__layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .bio__portrait {
+    max-width: 360px;
+  }
+  .research__panel {
+    padding: 44px 32px;
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .research__copy h2 br {
+    display: none;
+  }
+  /* Stacked, the book returns to the flow under the copy */
+  .research__visual {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: min(300px, 70vw);
+    margin: 0 auto;
+  }
+  .research__visual::after {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .timeline__rail {
+    display: none;
+  }
+  .tl {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 28px 0;
+  }
+  .tl__marker {
+    display: none;
+  }
+  .tl__logo {
+    margin-top: 0;
+  }
+  /* Nothing to reveal against once the rail is gone */
+  .tl__logo,
+  .tl__body {
+    opacity: 1;
+  }
+  .tl__body h3 {
+    font-size: 20px;
+  }
+}
+
+.page-contact {
+  --plum: #a82c7f;
+  --plum-light: #e07ab6;
+}
+
+.page-contact .hero--page .hero__aurora::before {
+  background: radial-gradient(
+      46% 100% at 34% 100%,
+      rgba(168, 44, 127, 0.28) 0%,
+      rgba(168, 44, 127, 0) 70%
+    ),
+    radial-gradient(
+      34% 88% at 74% 100%,
+      rgba(140, 60, 170, 0.18) 0%,
+      rgba(140, 60, 170, 0) 72%
+    );
+}
+
+.page-contact .hero--page .hero__aurora::after {
+  background: radial-gradient(
+      38% 96% at 64% 100%,
+      rgba(224, 122, 182, 0.16) 0%,
+      rgba(224, 122, 182, 0) 72%
+    ),
+    radial-gradient(
+      30% 84% at 20% 100%,
+      rgba(168, 44, 127, 0.13) 0%,
+      rgba(168, 44, 127, 0) 74%
+    );
+}
+
+.page-contact .hero--page::after {
+  box-shadow: 0 -1px 0 0 rgb(230 140 195 / calc(0.4 * var(--horizon-glow))),
+    0 -10px 40px -6px rgb(168 44 127 / calc(0.36 * var(--horizon-glow))),
+    0 -60px 120px -20px rgb(168 44 127 / calc(0.24 * var(--horizon-glow)));
+}
+
+.page-contact .hero--page .hero__deco {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 8px rgba(168, 44, 127, 0.28), 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.page-contact .tag {
+  color: #eba0cd;
+  border-color: rgba(168, 44, 127, 0.5);
+  background: rgba(168, 44, 127, 0.14);
+}
+
+.page-contact .constellation__lines path {
+  stroke: #c95b9c;
+}
+
+.page-contact .constellation__dots circle {
+  fill: #f0b3d6;
+}
+
+.page-contact .constellation__dots circle:nth-child(odd) {
+  fill: #a82c7f;
+}
+
+.page-contact .constellation__sparks path {
+  fill: #f2c4de;
+}
+
+/* Focus ring picks up the plum instead of the site-wide violet */
+.page-contact .field input:focus,
+.page-contact .field select:focus,
+.page-contact .field textarea:focus {
+  border-color: rgba(200, 90, 155, 0.7);
+  box-shadow: 0 0 0 3px rgba(168, 44, 127, 0.16);
+}
+
+/* Footer blooms, plum over a deepened base */
+.page-contact .footer {
+  background: linear-gradient(180deg, var(--bg-panel) 0%, #1d0d29 55%, #2a0d31 100%);
+}
+
+.page-contact .footer__glow--1 {
+  background: radial-gradient(
+    circle,
+    rgba(198, 62, 152, 0.6) 0%,
+    rgba(168, 44, 127, 0.26) 45%,
+    transparent 72%
+  );
+}
+
+.page-contact .footer__glow--2 {
+  background: radial-gradient(
+    circle,
+    rgba(122, 40, 128, 0.5) 0%,
+    rgba(90, 30, 100, 0.22) 50%,
+    transparent 74%
+  );
+}
+
+.page-contact .footer__glow--3 {
+  background: radial-gradient(
+    circle,
+    rgba(224, 122, 182, 0.38) 0%,
+    rgba(190, 90, 160, 0.16) 48%,
+    transparent 76%
+  );
+}
+
+.contact__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 72px;
+  align-items: start;
+}
+
+.contact__form h2,
+.contact__aside h2 {
+  font-size: clamp(24px, 2.6vw, 34px);
+  letter-spacing: -0.015em;
+  margin-bottom: 26px;
+}
+
+/* --- Form --- */
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.field label {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 15px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--white-smoke);
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16px;
+  transition: border-color 0.25s ease, background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+/* Faint enough to stay clearly secondary to the label above the field, but
+   still above the 3:1 contrast the placeholder needs to be readable. */
+.field input::placeholder,
+.field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.32);
+  font-weight: 300;
+}
+
+/* Placeholders step back further once you start typing in that field */
+.field input:focus::placeholder,
+.field textarea:focus::placeholder {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+/* Native select arrow can't be styled, so it's replaced with a chevron */
+.field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-opacity='.55' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
+  padding-right: 44px;
+}
+
+.field select option {
+  background: #12162d;
+  color: var(--white-smoke);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: rgba(145, 112, 242, 0.7);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(117, 71, 255, 0.16);
+}
+
+/* Browser autofill paints its own near-white fill straight over the field,
+   which on a dark form reads as a glaring error state. The background can't
+   be overridden directly, but a large inset shadow covers it, and
+   -webkit-text-fill-color is what actually colours autofilled text. The long
+   transition delay is the standard trick to stop the fill flashing through
+   on load. */
+.field input:-webkit-autofill,
+.field input:-webkit-autofill:hover,
+.field input:-webkit-autofill:focus,
+.field textarea:-webkit-autofill,
+.field select:-webkit-autofill {
+  -webkit-text-fill-color: var(--white-smoke);
+  -webkit-box-shadow: 0 0 0 1000px #191d38 inset;
+  box-shadow: 0 0 0 1000px #191d38 inset;
+  caret-color: var(--white-smoke);
+  transition: background-color 100000s ease-in-out 0s;
+}
+
+.field input:-webkit-autofill:focus,
+.field textarea:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #191d38 inset,
+    0 0 0 3px rgba(117, 71, 255, 0.16);
+  box-shadow: 0 0 0 1000px #191d38 inset, 0 0 0 3px rgba(117, 71, 255, 0.16);
+}
+
+/* Plum ring on the contact page, matching its focus colour */
+.page-contact .field input:-webkit-autofill:focus,
+.page-contact .field textarea:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #191d38 inset,
+    0 0 0 3px rgba(168, 44, 127, 0.16);
+  box-shadow: 0 0 0 1000px #191d38 inset, 0 0 0 3px rgba(168, 44, 127, 0.16);
+}
+
+/* Only flags a field once it has been interacted with and left invalid */
+.field input.is-invalid,
+.field textarea.is-invalid {
+  border-color: rgba(248, 80, 183, 0.7);
+}
+
+.contact__form .btn {
+  margin-top: 8px;
+}
+
+.contact__status {
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  color: rgba(225, 225, 225, 0.7);
+  min-height: 1.4em;
+}
+
+/* Before submit there's no message, and the reserved line was pushing the
+   fine print well clear of the button. Collapse it until it has content. */
+.contact__status:empty {
+  display: none;
+}
+
+.contact__status.is-success {
+  color: #8ce0c8;
+}
+
+.contact__status.is-error {
+  color: #f0a6a6;
+}
+
+.contact__status a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Off-screen rather than display:none — some bots skip hidden fields, and
+   this one is only useful if they fill it in. */
+.field--honey {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Submitting state: the button stays put but stops accepting clicks */
+.btn.is-busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Fine print under the form. Deliberately quiet — it's a legal notice, not
+   part of the flow the person is meant to follow. */
+.contact__privacy {
+  margin-top: 16px;
+  max-width: 52ch;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(225, 225, 225, 0.45);
+}
+
+.contact__privacy a {
+  color: rgba(240, 179, 214, 0.85);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(240, 179, 214, 0.4);
+  transition: color 0.25s ease, text-decoration-color 0.25s ease;
+}
+
+.contact__privacy a:hover {
+  color: #ffffff;
+  text-decoration-color: rgba(255, 255, 255, 0.7);
+}
+
+/* --- Direct links --- */
+.contact__aside-note {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(225, 225, 225, 0.65);
+  margin: -14px 0 24px;
+}
+
+.contact-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 52px 20px 20px;
+  margin-bottom: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(
+      140deg,
+      color-mix(in srgb, var(--accent) 14%, transparent) 0%,
+      transparent 60%
+    ),
+    rgba(255, 255, 255, 0.02);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-link:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  box-shadow: 0 20px 50px -28px rgba(0, 0, 0, 0.5),
+    0 0 40px -14px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.contact-link__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.contact-link__icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.contact-link__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.contact-link__body strong {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 300;
+  color: var(--white-smoke);
+}
+
+.contact-link__body span {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 14px;
+  color: rgba(225, 225, 225, 0.6);
+}
+
+.contact-link__arrow {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  margin-top: -9px;
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  transition: transform 0.3s ease;
+}
+
+.contact-link:hover .contact-link__arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 1000px) {
+  .contact__layout {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+}
+
+@media (max-width: 560px) {
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* ===== Mid-range fixes (kept together, before the small-screen scale) =====
+   Between the desktop layout and the 1100px stacking point, several blocks
+   still hold desktop-sized fixed elements. These bring them down before
+   they start squeezing the text beside them. */
+@media (max-width: 1500px) {
+  /* The right inset plus a 540px orbit left the copy column starved */
+  .about {
+    padding-right: var(--section-pad-x);
+  }
+}
+
+/* Lower bound matters: this block sits after the 1100px stacking rules in
+   the file, so without it the 400px second column won on phones and pushed
+   the orbit off the side of the screen. */
+@media (min-width: 1101px) and (max-width: 1380px) {
+  .about {
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 48px;
+  }
+  .about__visual {
+    --orbit-size: 400px;
+  }
+  .about {
+    --about-measure: none;
+  }
+  /* Cover is absolutely positioned, so it doesn't shrink on its own */
+  .book__cover {
+    width: 520px;
+    right: -50px;
+    bottom: -100px;
+  }
+  .book__copy {
+    max-width: 58%;
+  }
+  .book__panel {
+    padding: 76px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .book__cover {
+    width: 420px;
+    bottom: -70px;
+  }
+  .book__panel {
+    padding: 60px;
+    min-height: 0;
+  }
+  .graph__note {
+    padding: 34px 48px 34px 34px;
+  }
+}
+
+/* ===== Small-screen type scale (wins cascade — kept last on purpose) ===== */
+@media (max-width: 420px) {
+  .hero h1 {
+    font-size: 38px;
+  }
+  .about__title {
+    font-size: 28px;
+  }
+  .book__copy h2,
+  .domain h2,
+  .awards__head h2,
+  .work h2 {
+    font-size: 30px;
+  }
+}
